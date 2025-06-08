@@ -51,7 +51,12 @@ const MenuSection: React.FC<MenuSectionProps> = ({ translations, currentLanguage
 
   const getToppingName = (toppingId: string) => {
     const topping = TOPPINGS.find(t => t.id === toppingId);
-    return currentLanguage === 'he' ? topping?.nameHe : topping?.nameEn;
+    if (!topping) return toppingId;
+    
+    return currentLanguage === 'he' ? topping.nameHe :
+           currentLanguage === 'fr' ? (topping.nameFr || topping.nameEn) :
+           currentLanguage === 'ru' ? (topping.nameRu || topping.nameEn) :
+           topping.nameEn;
   };
 
   return (
@@ -60,7 +65,10 @@ const MenuSection: React.FC<MenuSectionProps> = ({ translations, currentLanguage
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">{translations.menuTitle}</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            מגוון עשיר של פיצות, פסטות ומנות עיקריות מוכנות באהבה ובמחויבות לאיכות הגבוהה ביותר
+            {currentLanguage === 'he' ? 'מגוון עשיר של פיצות, פסטות ומנות עיקריות מוכנות באהבה ובמחויבות לאיכות הגבוהה ביותר' :
+             currentLanguage === 'fr' ? 'Large sélection de pizzas, pâtes et plats principaux préparés avec amour et engagement pour la plus haute qualité' :
+             currentLanguage === 'ru' ? 'Богатый выбор пицц, пасты и основных блюд, приготовленных с любовью и приверженностью к высочайшему качеству' :
+             'Wide variety of pizzas, pastas and main dishes prepared with love and commitment to the highest quality'}
           </p>
         </div>
 
@@ -93,7 +101,10 @@ const MenuSection: React.FC<MenuSectionProps> = ({ translations, currentLanguage
                 {item.category === 'pizzas' && (
                   <div className="absolute top-3 right-3">
                     <span className="bg-green-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
-                      פופולרי
+                      {currentLanguage === 'he' ? 'פופולרי' :
+                       currentLanguage === 'fr' ? 'Populaire' :
+                       currentLanguage === 'ru' ? 'Популярно' :
+                       'Popular'}
                     </span>
                   </div>
                 )}
@@ -101,16 +112,27 @@ const MenuSection: React.FC<MenuSectionProps> = ({ translations, currentLanguage
 
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold mb-2">
-                  {currentLanguage === 'he' ? item.nameHe : item.nameEn}
+                  {currentLanguage === 'he' ? item.nameHe : 
+                   currentLanguage === 'fr' ? (item.nameFr || item.nameEn) :
+                   currentLanguage === 'ru' ? (item.nameRu || item.nameEn) :
+                   item.nameEn}
                 </h3>
                 <p className="text-gray-600 mb-4 text-sm">
-                  {currentLanguage === 'he' ? item.descriptionHe : item.descriptionEn}
+                  {currentLanguage === 'he' ? item.descriptionHe : 
+                   currentLanguage === 'fr' ? (item.descriptionFr || item.descriptionEn) :
+                   currentLanguage === 'ru' ? (item.descriptionRu || item.descriptionEn) :
+                   item.descriptionEn}
                 </p>
 
                 {/* Toppings Selection */}
                 {item.toppings && item.toppings.length > 0 && (
                   <div className="mb-4">
-                    <p className="text-sm font-medium mb-2">תוספות זמינות (+{formatPrice(item.toppingPrice || 0)} כל אחת):</p>
+                    <p className="text-sm font-medium mb-2">
+                      {currentLanguage === 'he' ? `תוספות זמינות (+${formatPrice(item.toppingPrice || 0)} כל אחת):` :
+                       currentLanguage === 'fr' ? `Garnitures disponibles (+${formatPrice(item.toppingPrice || 0)} chacune):` :
+                       currentLanguage === 'ru' ? `Доступные добавки (+${formatPrice(item.toppingPrice || 0)} каждая):` :
+                       `Available toppings (+${formatPrice(item.toppingPrice || 0)} each):`}
+                    </p>
                     <div className="grid grid-cols-2 gap-2">
                       {item.toppings.map(toppingId => (
                         <div key={toppingId} className="flex items-center space-x-2">
