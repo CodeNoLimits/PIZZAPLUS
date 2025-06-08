@@ -4,7 +4,7 @@ export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
 export const ACCENT_COLOR = '#FFD700';
 
-export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyAlIBrQ16b_xVo-gY5JyBTCEEnfyUdjT7I';
 
 export const TRANSLATIONS: Record<string, Translations> = {
   he: {
@@ -235,8 +235,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'pizza-xl',
     nameHe: 'מגש XL',
     nameEn: 'Pizza XL',
+    nameFr: 'Pizza XL',
+    nameRu: 'Пицца XL',
     descriptionHe: 'פיצה גדולה עם רוטב עגבניות ומוצרלה - קוטר 42',
     descriptionEn: 'Large pizza with tomato sauce and mozzarella - 42cm diameter',
+    descriptionFr: 'Grande pizza avec sauce tomate et mozzarella - diamètre 42cm',
+    descriptionRu: 'Большая пицца с томатным соусом и моцареллой - диаметр 42см',
     price: 6500, // ₪65
     category: 'pizzas',
     available: true,
@@ -247,8 +251,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'pizza-l',
     nameHe: 'מגש L',
     nameEn: 'Pizza L',
+    nameFr: 'Pizza L',
+    nameRu: 'Пицца L',
     descriptionHe: 'פיצה בינונית עם רוטב עגבניות ומוצרלה - קוטר 36',
     descriptionEn: 'Medium pizza with tomato sauce and mozzarella - 36cm diameter',
+    descriptionFr: 'Pizza moyenne avec sauce tomate et mozzarella - diamètre 36cm',
+    descriptionRu: 'Средняя пицца с томатным соусом и моцареллой - диаметр 36см',
     price: 5200, // ₪52
     category: 'pizzas',
     available: true,
@@ -260,8 +268,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'pizza-personal',
     nameHe: 'מגש אישי',
     nameEn: 'Personal Pizza',
+    nameFr: 'Pizza Individuelle',
+    nameRu: 'Персональная Пицца',
     descriptionHe: 'פיצה אישית עם רוטב עגבניות ומוצרלה',
     descriptionEn: 'Personal pizza with tomato sauce and mozzarella',
+    descriptionFr: 'Pizza individuelle avec sauce tomate et mozzarella',
+    descriptionRu: 'Персональная пицца с томатным соусом и моцареллой',
     price: 3500, // ₪35
     category: 'pizzas',
     available: true,
@@ -274,8 +286,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'pasta-tomato-basil',
     nameHe: 'רוטב עגבניות ובזיליקום',
     nameEn: 'Tomato and Basil Pasta',
+    nameFr: 'Pâtes Tomate et Basilic',
+    nameRu: 'Паста с Томатами и Базиликом',
     descriptionHe: 'פסטה ברוטב עגבניות טרי עם בזיליקום',
     descriptionEn: 'Pasta in fresh tomato sauce with basil',
+    descriptionFr: 'Pâtes dans une sauce tomate fraîche avec basilic',
+    descriptionRu: 'Паста в свежем томатном соусе с базиликом',
     price: 5200, // ₪52
     category: 'pastas',
     available: true,
@@ -284,8 +300,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'pasta-cream-mushrooms',
     nameHe: 'שמנת פטריות',
     nameEn: 'Mushroom Cream Pasta',
+    nameFr: 'Pâtes Crème aux Champignons',
+    nameRu: 'Паста в Сливочном Соусе с Грибами',
     descriptionHe: 'פסטה ברוטב שמנת עם פטריות טריות',
     descriptionEn: 'Pasta in cream sauce with fresh mushrooms',
+    descriptionFr: 'Pâtes dans une sauce à la crème avec champignons frais',
+    descriptionRu: 'Паста в сливочном соусе со свежими грибами',
     price: 5200, // ₪52
     category: 'pastas',
     available: true,
@@ -294,8 +314,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'pasta-rose',
     nameHe: 'רוזה',
     nameEn: 'Rosé Pasta',
+    nameFr: 'Pâtes Rosé',
+    nameRu: 'Паста Розе',
     descriptionHe: 'פסטה ברוטב עגבניות ושמנת',
     descriptionEn: 'Pasta in tomato and cream sauce',
+    descriptionFr: 'Pâtes dans une sauce tomate et crème',
+    descriptionRu: 'Паста в томатно-сливочном соусе',
     price: 5200, // ₪52
     category: 'pastas',
     available: true,
