@@ -4,7 +4,7 @@ export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
 export const ACCENT_COLOR = '#FFD700';
 
-export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
+export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 
 export const TRANSLATIONS: Record<string, Translations> = {
   he: {
@@ -28,6 +28,7 @@ export const TRANSLATIONS: Record<string, Translations> = {
     all: 'הכל',
     pizzas: 'פיצות',
     pastas: 'פסטות',
+    salads: 'סלטים',
     mains: 'עיקריות',
     sides: 'תוספות',
     desserts: 'קינוחים',
@@ -81,6 +82,7 @@ export const TRANSLATIONS: Record<string, Translations> = {
     all: 'All',
     pizzas: 'Pizzas',
     pastas: 'Pastas',
+    salads: 'Salads',
     mains: 'Main Dishes',
     sides: 'Sides',
     desserts: 'Desserts',
@@ -119,70 +121,134 @@ export const MENU_ITEMS: MenuItem[] = [
   // Pizzas
   {
     id: 'pizza-l',
-    nameHe: 'פיצה משפחתית L',
-    nameEn: 'Family Pizza L',
-    descriptionHe: 'פיצה קוטר 36 ס״מ עם רוטב עגבניות טרי, מוצרלה איכותית',
-    descriptionEn: '36cm pizza with fresh tomato sauce, quality mozzarella',
-    price: 5500, // ₪55
+    nameHe: 'מגש L',
+    nameEn: 'Pizza L',
+    descriptionHe: 'פיצה קוטר 36 עם רוטב עגבניות ומוצרלה',
+    descriptionEn: '36cm pizza with tomato sauce and mozzarella',
+    price: 4500, // ₪45
     category: 'pizzas',
     available: true,
-    toppings: ['mushrooms', 'olives', 'peppers', 'onions', 'tomatoes', 'corn'],
-    toppingPrice: 700, // ₪7 per topping
+    toppings: ['tomatoes', 'onions', 'mushrooms', 'corn', 'olives-green', 'olives-black', 'bulgarian', 'tuna'],
+    toppingPrice: 600, // ₪5-7 per topping
   },
   {
     id: 'pizza-personal',
-    nameHe: 'פיצה אישית',
+    nameHe: 'מגש אישי',
     nameEn: 'Personal Pizza',
-    descriptionHe: 'פיצה קוטר 25 ס״מ מושלמת לאדם אחד',
-    descriptionEn: '25cm pizza perfect for one person',
-    price: 3500, // ₪35
+    descriptionHe: 'פיצה אישית עם רוטב עגבניות ומוצרלה',
+    descriptionEn: 'Personal pizza with tomato sauce and mozzarella',
+    price: 2800, // ₪28
     category: 'pizzas',
     available: true,
-    toppings: ['mushrooms', 'olives', 'peppers', 'onions', 'tomatoes', 'corn'],
-    toppingPrice: 500, // ₪5 per topping
+    toppings: ['tomatoes', 'onions', 'mushrooms', 'corn', 'olives-green', 'olives-black', 'bulgarian', 'tuna'],
+    toppingPrice: 600, // ₪5-7 per topping
   },
   
   // Pastas
   {
-    id: 'pasta-tomato',
-    nameHe: 'פסטה ברוטב עגבניות',
-    nameEn: 'Pasta in Tomato Sauce',
-    descriptionHe: 'פסטה טרייה ברוטב עגבניות בזיליקום מעולה',
-    descriptionEn: 'Fresh pasta in excellent tomato basil sauce',
-    price: 4200, // ₪42
+    id: 'pasta-tomato-basil',
+    nameHe: 'רוטב עגבניות ובזיליקום',
+    nameEn: 'Tomato and Basil Pasta',
+    descriptionHe: 'פסטה ברוטב עגבניות טרי עם בזיליקום',
+    descriptionEn: 'Pasta in fresh tomato sauce with basil',
+    price: 4500, // ₪45
     category: 'pastas',
     available: true,
   },
   {
-    id: 'pasta-alfredo',
-    nameHe: 'פסטה אלפרדו',
-    nameEn: 'Alfredo Pasta',
-    descriptionHe: 'פסטה ברוטב שמנת עשיר עם פטריות טריות',
-    descriptionEn: 'Pasta in rich cream sauce with fresh mushrooms',
-    price: 4800, // ₪48
+    id: 'pasta-cream-mushrooms',
+    nameHe: 'שמנת פטריות',
+    nameEn: 'Mushroom Cream Pasta',
+    descriptionHe: 'פסטה ברוטב שמנת עם פטריות טריות',
+    descriptionEn: 'Pasta in cream sauce with fresh mushrooms',
+    price: 4500, // ₪45
     category: 'pastas',
     available: true,
+  },
+  {
+    id: 'pasta-rose',
+    nameHe: 'רוזה',
+    nameEn: 'Rosé Pasta',
+    descriptionHe: 'פסטה ברוטב עגבניות ושמנת',
+    descriptionEn: 'Pasta in tomato and cream sauce',
+    price: 4500, // ₪45
+    category: 'pastas',
+    available: true,
+  },
+  
+  // Salads
+  {
+    id: 'salad-small',
+    nameHe: 'סלט קטן',
+    nameEn: 'Small Salad',
+    descriptionHe: 'ירקות טריים בתיבול שמן זית ולימון',
+    descriptionEn: 'Fresh vegetables with olive oil and lemon dressing',
+    price: 3500, // ₪35
+    category: 'salads',
+    available: true,
+    toppings: ['egg', 'tuna', 'avocado', 'bulgarian'],
+  },
+  {
+    id: 'salad-large',
+    nameHe: 'סלט גדול',
+    nameEn: 'Large Salad',
+    descriptionHe: 'ירקות טריים בתיבול שמן זית ולימון',
+    descriptionEn: 'Fresh vegetables with olive oil and lemon dressing',
+    price: 5000, // ₪50
+    category: 'salads',
+    available: true,
+    toppings: ['egg', 'tuna', 'avocado', 'bulgarian'],
   },
   
   // Main Dishes
   {
     id: 'fish-chips',
-    nameHe: 'פיש אנד צ׳יפס',
+    nameHe: 'פיש & צ\'יפס',
     nameEn: 'Fish & Chips',
-    descriptionHe: 'פילה דג טרי בציפוי פריך עם צ׳יפס בית',
-    descriptionEn: 'Fresh fish fillet in crispy coating with house fries',
-    price: 5800, // ₪58
+    descriptionHe: 'דג מטוגן בציפוי פריך עם צ\'יפס',
+    descriptionEn: 'Fried fish in crispy coating with fries',
+    price: 6100, // ₪61
+    category: 'mains',
+    available: true,
+  },
+  {
+    id: 'cheese-crust',
+    nameHe: 'צ\'יז קראסט',
+    nameEn: 'Cheese Crust',
+    descriptionHe: 'חזה עוף ממולא בגבינה ומטוגן',
+    descriptionEn: 'Chicken breast stuffed with cheese and fried',
+    price: 6300, // ₪63
+    category: 'mains',
+    available: true,
+  },
+  {
+    id: 'soup-seasonal',
+    nameHe: 'מרקים (בעונה)',
+    nameEn: 'Soups (seasonal)',
+    descriptionHe: 'מרק חם',
+    descriptionEn: 'Hot soup',
+    price: 2500, // ₪25
     category: 'mains',
     available: true,
   },
   
   // Sides
   {
-    id: 'fries',
-    nameHe: 'צ׳יפס בית',
-    nameEn: 'House Fries',
-    descriptionHe: 'צ׳יפס זהוב ופריך מתפוחי אדמה טריים',
-    descriptionEn: 'Golden crispy fries from fresh potatoes',
+    id: 'fries-small',
+    nameHe: 'צ\'יפס קטן',
+    nameEn: 'Small Fries',
+    descriptionHe: 'מנה קטנה של צ\'יפס זהוב',
+    descriptionEn: 'Small portion of golden fries',
+    price: 1200, // ₪12
+    category: 'sides',
+    available: true,
+  },
+  {
+    id: 'fries-large',
+    nameHe: 'צ\'יפס גדול',
+    nameEn: 'Large Fries',
+    descriptionHe: 'מנה גדולה של צ\'יפס זהוב',
+    descriptionEn: 'Large portion of golden fries',
     price: 1800, // ₪18
     category: 'sides',
     available: true,
@@ -193,17 +259,33 @@ export const MENU_ITEMS: MenuItem[] = [
     nameEn: 'Garlic Bread',
     descriptionHe: 'לחם אפוי עם שום וחמאה',
     descriptionEn: 'Baked bread with garlic and butter',
-    price: 1500, // ₪15
+    price: 1200, // ₪12
     category: 'sides',
+    available: true,
+  },
+  
+  // Desserts
+  {
+    id: 'chocolate-sticks',
+    nameHe: 'מקלות שוקולד',
+    nameEn: 'Chocolate Sticks',
+    descriptionHe: 'מקלות בצק פריכים עם שוקולד חם',
+    descriptionEn: 'Crispy dough sticks with hot chocolate',
+    price: 2500, // ₪25
+    category: 'desserts',
     available: true,
   },
 ];
 
 export const TOPPINGS = [
-  { id: 'mushrooms', nameHe: 'פטריות', nameEn: 'Mushrooms' },
-  { id: 'olives', nameHe: 'זיתים', nameEn: 'Olives' },
-  { id: 'peppers', nameHe: 'פלפלים', nameEn: 'Peppers' },
-  { id: 'onions', nameHe: 'בצל', nameEn: 'Onions' },
   { id: 'tomatoes', nameHe: 'עגבניות', nameEn: 'Tomatoes' },
+  { id: 'onions', nameHe: 'בצל', nameEn: 'Onions' },
+  { id: 'mushrooms', nameHe: 'פטריות', nameEn: 'Mushrooms' },
   { id: 'corn', nameHe: 'תירס', nameEn: 'Corn' },
+  { id: 'olives-green', nameHe: 'זיתים ירוקים', nameEn: 'Green Olives' },
+  { id: 'olives-black', nameHe: 'זיתים שחורים', nameEn: 'Black Olives' },
+  { id: 'bulgarian', nameHe: 'בולגרית', nameEn: 'Bulgarian Cheese' },
+  { id: 'tuna', nameHe: 'טונה', nameEn: 'Tuna' },
+  { id: 'egg', nameHe: 'ביצה קשה', nameEn: 'Hard Boiled Egg' },
+  { id: 'avocado', nameHe: 'אבוקדו', nameEn: 'Avocado' },
 ];

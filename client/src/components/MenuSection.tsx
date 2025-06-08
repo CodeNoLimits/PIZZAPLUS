@@ -20,6 +20,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({ translations, currentLanguage
     { id: 'all', label: translations.all },
     { id: 'pizzas', label: translations.pizzas },
     { id: 'pastas', label: translations.pastas },
+    { id: 'salads', label: translations.salads },
     { id: 'mains', label: translations.mains },
     { id: 'sides', label: translations.sides },
     { id: 'desserts', label: translations.desserts },

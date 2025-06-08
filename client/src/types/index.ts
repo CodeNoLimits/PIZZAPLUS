@@ -49,6 +49,7 @@ export interface Translations {
   all: string;
   pizzas: string;
   pastas: string;
+  salads: string;
   mains: string;
   sides: string;
   desserts: string;
