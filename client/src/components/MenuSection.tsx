@@ -96,8 +96,16 @@ const MenuSection: React.FC<MenuSectionProps> = ({ translations, currentLanguage
           {filteredItems.map(item => (
             <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-all transform hover:-translate-y-1">
               {/* Item Image */}
-              <div className="relative h-48 bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center">
-                <div className="text-white text-6xl opacity-30">🍕</div>
+              <div className="relative h-48 bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center overflow-hidden">
+                {item.image ? (
+                  <img 
+                    src={item.image} 
+                    alt={currentLanguage === 'he' ? item.nameHe : item.nameEn}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="text-white text-6xl opacity-30">🍕</div>
+                )}
                 {item.category === 'pizzas' && (
                   <div className="absolute top-3 right-3">
                     <span className="bg-green-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
