@@ -51,36 +51,41 @@ const BitPayment: React.FC<BitPaymentProps> = ({
       customerName: customerInfo.name,
       customerPhone: customerInfo.phone,
       customerEmail: customerInfo.email,
+      description: `Pizza Plus Order #${orderId}`,
       items: cartItems.map(item => ({
         name: currentLanguage === 'he' ? item.nameHe : item.nameEn,
         quantity: item.quantity,
         price: item.totalPrice
-      })),
-      returnUrl: `${window.location.origin}/payment-success`,
-      webhookUrl: `${window.location.origin}/api/payment-webhook`
+      }))
     };
 
     try {
-      // Bit API integration for Israeli payments
-      const bitPaymentUrl = `https://bit.ly/pay?` + new URLSearchParams({
-        amount: (total / 100).toString(),
-        description: `Pizza Plus Order #${orderId}`,
-        phone: customerInfo.phone,
-        name: customerInfo.name
-      }).toString();
+      // Call our Bit payment API
+      const response = await fetch('/api/bit/create-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
+      });
 
-      // Open Bit app or redirect to payment
-      window.open(bitPaymentUrl, '_blank');
+      const result = await response.json();
       
-      // Show success message and close
-      setTimeout(() => {
-        setIsProcessing(false);
-        onClose();
-        alert(currentLanguage === 'he' 
-          ? 'תשלום נשלח! אנא השלם את התשלום באפליקציית Bit'
-          : 'Payment sent! Please complete payment in Bit app'
-        );
-      }, 1000);
+      if (result.success && result.paymentUrl) {
+        // Open Bit payment URL
+        window.open(result.paymentUrl, '_blank');
+        
+        setTimeout(() => {
+          setIsProcessing(false);
+          onClose();
+          alert(currentLanguage === 'he' 
+            ? 'תשלום נשלח! אנא השלם את התשלום באפליקציית Bit'
+            : 'Payment sent! Please complete payment in Bit app'
+          );
+        }, 1000);
+      } else {
+        throw new Error(result.error || 'Payment creation failed');
+      }
       
     } catch (error) {
       setIsProcessing(false);

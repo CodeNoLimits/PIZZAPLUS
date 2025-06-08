@@ -28,13 +28,15 @@ Restaurant Details:
 COMPLETE MENU WITH EXACT PRICES:
 
 PIZZAS:
-- מגש L (Pizza L 36cm): ₪52 base price
+- מגש XL (Pizza XL 42cm): ₪65 base price
+- מגש L (Pizza L 36cm): ₪52 base price  
 - מגש אישי (Personal Pizza): ₪35 base price
 
 PIZZA TOPPINGS:
+For XL Pizza (₪9 each): עגבניות, בצל, זיתים ירוקים, זיתים שחורים, פטריות, פלפל חריף, בולגרית (₪12), חציל, בטטה, תירס, אננס, טונה (₪12), פסטו
 For Large Pizza (₪7 each): עגבניות, בצל, זיתים ירוקים, זיתים שחורים, פטריות, פלפל חריף, בולגרית (₪10), חציל, בטטה, תירס, אננס, טונה (₪10), פסטו
-For Personal Pizza (₪5 each): עגבניות, בצל, זיתים ירוקים, זיתים שחורים, פטריות, פלפל חריף, בולגרית (₪8), חציל, בטטה, תירס, אננס, טונה (₪8), פסטו
-For Half Large Pizza (₪5 each per half): Same toppings, בולגרית (₪7), טונה (₪7)
+For Personal Pizza (₪6 each): עגבניות, בצל, זיתים ירוקים, זיתים שחורים, פטריות, פלפל חריף, בולגרית (₪8), חציל, בטטה, תירס, אננס, טונה (₪8), פסטו
+For Half Large Pizza (₪6 each per half): Same toppings, בולגרית (₪7), טונה (₪7)
 
 PASTAS:
 - רוטב עגבניות ובזיליקום (Tomato & Basil): ₪52

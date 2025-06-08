@@ -142,17 +142,26 @@ const Cart: React.FC<CartProps> = ({
                 <span>{translations.total}</span>
                 <span>{formatPrice(total)}</span>
               </div>
-              <Button 
-                className="w-full bg-green-600 hover:bg-green-700 text-white py-3"
-                onClick={() => {
-                  const message = generateWhatsAppMessage();
-                  const whatsappUrl = `https://wa.me/972546083500?text=${message}`;
-                  window.open(whatsappUrl, '_blank');
-                }}
-              >
-                <MessageCircle className="w-4 h-4 mr-2" />
-                {translations.orderWhatsapp}
-              </Button>
+              <div className="space-y-3">
+                <Button 
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3"
+                  onClick={onCheckout}
+                >
+                  <span className="text-lg mr-2">💳</span>
+                  {currentLanguage === 'he' ? 'תשלום מאובטח' : 'Secure Payment'}
+                </Button>
+                <Button 
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-3"
+                  onClick={() => {
+                    const message = generateWhatsAppMessage();
+                    const whatsappUrl = `https://wa.me/972546083500?text=${message}`;
+                    window.open(whatsappUrl, '_blank');
+                  }}
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  {translations.orderWhatsapp}
+                </Button>
+              </div>
             </div>
           </div>
         )}

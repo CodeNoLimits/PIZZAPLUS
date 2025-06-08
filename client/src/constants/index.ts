@@ -433,22 +433,166 @@ export const MENU_ITEMS: MenuItem[] = [
 ];
 
 export const TOPPINGS = [
-  // Pizza toppings
-  { id: 'tomatoes', nameHe: 'עגבניות', nameEn: 'Tomatoes', nameFr: 'Tomates', nameRu: 'Помидоры' },
-  { id: 'onions', nameHe: 'בצל', nameEn: 'Onions', nameFr: 'Oignons', nameRu: 'Лук' },
-  { id: 'olives-green', nameHe: 'זיתים ירוקים', nameEn: 'Green Olives', nameFr: 'Olives vertes', nameRu: 'Зеленые оливки' },
-  { id: 'olives-black', nameHe: 'זיתים שחורים', nameEn: 'Black Olives', nameFr: 'Olives noires', nameRu: 'Черные оливки' },
-  { id: 'mushrooms', nameHe: 'פטריות', nameEn: 'Mushrooms', nameFr: 'Champignons', nameRu: 'Грибы' },
-  { id: 'hot-pepper', nameHe: 'פלפל חריף', nameEn: 'Hot Pepper', nameFr: 'Piment fort', nameRu: 'Острый перец' },
-  { id: 'bulgarian', nameHe: 'בולגרית', nameEn: 'Bulgarian Cheese', nameFr: 'Fromage bulgare', nameRu: 'Болгарский сыр' },
-  { id: 'eggplant', nameHe: 'חציל', nameEn: 'Eggplant', nameFr: 'Aubergine', nameRu: 'Баклажан' },
-  { id: 'sweet-potato', nameHe: 'בטטה', nameEn: 'Sweet Potato', nameFr: 'Patate douce', nameRu: 'Батат' },
-  { id: 'corn', nameHe: 'תירס', nameEn: 'Corn', nameFr: 'Maïs', nameRu: 'Кукуруза' },
-  { id: 'pineapple', nameHe: 'אננס', nameEn: 'Pineapple', nameFr: 'Ananas', nameRu: 'Ананас' },
-  { id: 'tuna', nameHe: 'טונה', nameEn: 'Tuna', nameFr: 'Thon', nameRu: 'Тунец' },
-  { id: 'pesto', nameHe: 'פסטו', nameEn: 'Pesto', nameFr: 'Pesto', nameRu: 'Песто' },
+  // Pizza toppings with pricing info
+  { 
+    id: 'tomatoes', 
+    nameHe: 'עגבניות', 
+    nameEn: 'Tomatoes', 
+    nameFr: 'Tomates', 
+    nameRu: 'Помидоры',
+    priceXL: 850, // ₪8.5 for XL
+    priceL: 700, // ₪7 for L
+    pricePersonal: 600, // ₪6 for Personal
+    priceHalf: 600 // ₪6 for half L
+  },
+  { 
+    id: 'onions', 
+    nameHe: 'בצל', 
+    nameEn: 'Onions', 
+    nameFr: 'Oignons', 
+    nameRu: 'Лук',
+    priceXL: 850,
+    priceL: 700,
+    pricePersonal: 600,
+    priceHalf: 600
+  },
+  { 
+    id: 'olives-green', 
+    nameHe: 'זיתים ירוקים', 
+    nameEn: 'Green Olives', 
+    nameFr: 'Olives vertes', 
+    nameRu: 'Зеленые оливки',
+    priceXL: 850,
+    priceL: 700,
+    pricePersonal: 600,
+    priceHalf: 600
+  },
+  { 
+    id: 'olives-black', 
+    nameHe: 'זיתים שחורים', 
+    nameEn: 'Black Olives', 
+    nameFr: 'Olives noires', 
+    nameRu: 'Черные оливки',
+    priceXL: 850,
+    priceL: 700,
+    pricePersonal: 600,
+    priceHalf: 600
+  },
+  { 
+    id: 'mushrooms', 
+    nameHe: 'פטריות', 
+    nameEn: 'Mushrooms', 
+    nameFr: 'Champignons', 
+    nameRu: 'Грибы',
+    priceXL: 850,
+    priceL: 700,
+    pricePersonal: 600,
+    priceHalf: 600
+  },
+  { 
+    id: 'hot-pepper', 
+    nameHe: 'פלפל חריף', 
+    nameEn: 'Hot Pepper', 
+    nameFr: 'Piment fort', 
+    nameRu: 'Острый перец',
+    priceXL: 850,
+    priceL: 700,
+    pricePersonal: 600,
+    priceHalf: 600
+  },
+  { 
+    id: 'bulgarian', 
+    nameHe: 'בולגרית', 
+    nameEn: 'Bulgarian Cheese', 
+    nameFr: 'Fromage bulgare', 
+    nameRu: 'Болгарский сыр',
+    priceXL: 1200, // ₪12 for XL (premium topping)
+    priceL: 1000, // ₪10 for L
+    pricePersonal: 800, // ₪8 for Personal
+    priceHalf: 700 // ₪7 for half L
+  },
+  { 
+    id: 'eggplant', 
+    nameHe: 'חציל', 
+    nameEn: 'Eggplant', 
+    nameFr: 'Aubergine', 
+    nameRu: 'Баклажан',
+    priceXL: 850,
+    priceL: 700,
+    pricePersonal: 600,
+    priceHalf: 600
+  },
+  { 
+    id: 'sweet-potato', 
+    nameHe: 'בטטה', 
+    nameEn: 'Sweet Potato', 
+    nameFr: 'Patate douce', 
+    nameRu: 'Батат',
+    priceXL: 850,
+    priceL: 700,
+    pricePersonal: 600,
+    priceHalf: 600
+  },
+  { 
+    id: 'corn', 
+    nameHe: 'תירס', 
+    nameEn: 'Corn', 
+    nameFr: 'Maïs', 
+    nameRu: 'Кукуруза',
+    priceXL: 850,
+    priceL: 700,
+    pricePersonal: 600,
+    priceHalf: 600
+  },
+  { 
+    id: 'pineapple', 
+    nameHe: 'אננס', 
+    nameEn: 'Pineapple', 
+    nameFr: 'Ananas', 
+    nameRu: 'Ананас',
+    priceXL: 850,
+    priceL: 700,
+    pricePersonal: 600,
+    priceHalf: 600
+  },
+  { 
+    id: 'tuna', 
+    nameHe: 'טונה', 
+    nameEn: 'Tuna', 
+    nameFr: 'Thon', 
+    nameRu: 'Тунец',
+    priceXL: 1200, // ₪12 for XL (premium topping)
+    priceL: 1000, // ₪10 for L
+    pricePersonal: 800, // ₪8 for Personal
+    priceHalf: 700 // ₪7 for half L
+  },
+  { 
+    id: 'pesto', 
+    nameHe: 'פסטו', 
+    nameEn: 'Pesto', 
+    nameFr: 'Pesto', 
+    nameRu: 'Песто',
+    priceXL: 850,
+    priceL: 700,
+    pricePersonal: 600,
+    priceHalf: 600
+  },
   
   // Salad toppings
-  { id: 'egg', nameHe: 'ביצה קשה', nameEn: 'Hard Boiled Egg', nameFr: 'Œuf dur', nameRu: 'Вареное яйцо' },
-  { id: 'avocado', nameHe: 'אבוקדו', nameEn: 'Avocado', nameFr: 'Avocat', nameRu: 'Авокадо' },
+  { 
+    id: 'egg', 
+    nameHe: 'ביצה קשה', 
+    nameEn: 'Hard Boiled Egg', 
+    nameFr: 'Œuf dur', 
+    nameRu: 'Вареное яйцо',
+    priceSalad: 600 // ₪6 for salads
+  },
+  { 
+    id: 'avocado', 
+    nameHe: 'אבוקדו', 
+    nameEn: 'Avocado', 
+    nameFr: 'Avocat', 
+    nameRu: 'Авокадо',
+    priceSalad: 800 // ₪8 for salads
+  },
 ];
