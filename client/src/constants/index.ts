@@ -3,6 +3,7 @@ import pizzaLImage from '@assets/image_1749422361511.png';
 import pizzaXLImage from '@assets/image_1749422609268.png';
 import fishChipsImage from '@assets/image_1749422785796.png';
 import smallSaladImage from '@assets/image_1749422920149.png';
+import largeSaladImage from '@assets/image_1749423026096.png';
 
 export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
@@ -360,6 +361,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Свежие овощи с заправкой из оливкового масла и лимона',
     price: 5500, // ₪55
     category: 'salads',
+    image: largeSaladImage,
     available: true,
     toppings: ['egg', 'tuna', 'avocado', 'bulgarian'],
   },
