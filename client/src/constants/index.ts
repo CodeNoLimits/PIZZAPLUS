@@ -10,6 +10,7 @@ import rosePastaImage from '@assets/image_1749423419789.png';
 import basilPastaImage from '@assets/image_1749423446670.png';
 import garlicBreadImage from '@assets/image_1749423760035.png';
 import soupImage from '@assets/image_1749423822674.png';
+import chocolateSticksImage from '@assets/image_1749423875451.png';
 
 export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
@@ -433,6 +434,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Палочки с шоколадом',
     price: 3200, // ₪32
     category: 'desserts',
+    image: chocolateSticksImage,
     available: true,
   },
   
