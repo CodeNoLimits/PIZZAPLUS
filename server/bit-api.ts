@@ -105,8 +105,8 @@ function generateBitPaymentUrl(paymentData: BitPaymentRequest): string {
     `תשלום עבור ${paymentData.description}\nסכום: ${amount}₪\nמספר הזמנה: ${paymentData.orderId}`
   );
   
-  // Use actual Bit mobile payment URL that works in Israel
-  return `https://wa.me/972544208008?text=${bitMessage}`;
+  // Use Pizza Plus restaurant WhatsApp number for Bit payments
+  return `https://wa.me/972546083500?text=${bitMessage}`;
 }
 
 // Get payment status
