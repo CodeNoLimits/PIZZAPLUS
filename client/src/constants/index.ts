@@ -1,4 +1,6 @@
 import { MenuItem, Translations } from '../types';
+import pizzaLImage from '@assets/image_1749422361511.png';
+import pizzaXLImage from '@assets/image_1749422609268.png';
 
 export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
@@ -243,6 +245,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Большая пицца с томатным соусом и моцареллой - диаметр 42см',
     price: 6500, // ₪65
     category: 'pizzas',
+    image: pizzaXLImage,
     available: true,
     toppings: ['tomatoes', 'onions', 'olives-green', 'olives-black', 'mushrooms', 'hot-pepper', 'bulgarian', 'eggplant', 'sweet-potato', 'corn', 'pineapple', 'tuna', 'pesto'],
     toppingPrice: 850, // ₪8.5 per topping (20% more than L)
@@ -259,7 +262,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Средняя пицца с томатным соусом и моцареллой - диаметр 36см',
     price: 5200, // ₪52
     category: 'pizzas',
-    image: '@assets/image_1749422361511.png',
+    image: pizzaLImage,
     available: true,
     toppings: ['tomatoes', 'onions', 'olives-green', 'olives-black', 'mushrooms', 'hot-pepper', 'bulgarian', 'eggplant', 'sweet-potato', 'corn', 'pineapple', 'tuna', 'pesto'],
     toppingPrice: 700, // ₪7 per topping for whole pizza
