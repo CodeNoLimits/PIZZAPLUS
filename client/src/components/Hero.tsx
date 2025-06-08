@@ -27,7 +27,7 @@ const Hero: React.FC<HeroProps> = ({ translations }) => {
               <img 
                 src={pizzaPlusLogo} 
                 alt="Pizza Plus Logo" 
-                className="mx-auto h-24 w-auto rounded-lg shadow-lg bg-white/10 backdrop-blur-sm p-2"
+                className="mx-auto h-40 w-auto rounded-lg shadow-lg bg-white/10 backdrop-blur-sm p-3"
               />
             </div>
             <div className="inline-flex items-center bg-yellow-500/20 backdrop-blur-sm rounded-full px-4 py-2 mb-4">
