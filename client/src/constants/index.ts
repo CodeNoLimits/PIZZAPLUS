@@ -14,6 +14,9 @@ import chocolateSticksImage from '@assets/image_1749423875451.png';
 import largeFriesImage from '@assets/image_1749424100080.png';
 import cheeseCrustImage from '@assets/image_1749424147684.png';
 import smallFriesImage from '@assets/image_1749424260009.png';
+import largeCokeBtlImage from '@assets/image_1749424305323.png';
+import smallCokeBtlImage from '@assets/image_1749424325308.png';
+import cokeCanImage from '@assets/image_1749424375972.png';
 
 export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
@@ -502,6 +505,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Бутылка',
     price: 1500, // ₪15
     category: 'drinks',
+    image: largeCokeBtlImage,
     available: true,
   },
   {
@@ -516,6 +520,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Бутылка',
     price: 1000, // ₪10
     category: 'drinks',
+    image: smallCokeBtlImage,
     available: true,
   },
   {
@@ -530,6 +535,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Банка',
     price: 800, // ₪8
     category: 'drinks',
+    image: cokeCanImage,
     available: true,
   },
 ];
