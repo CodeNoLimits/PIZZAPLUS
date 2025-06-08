@@ -7,6 +7,7 @@ import largeSaladImage from '@assets/image_1749423026096.png';
 import mushroomCreamImage from '@assets/image_1749423091982.png';
 import personalPizzaImage from '@assets/image_1749423174355.png';
 import rosePastaImage from '@assets/image_1749423419789.png';
+import basilPastaImage from '@assets/image_1749423446670.png';
 
 export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
@@ -305,6 +306,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Паста в свежем томатном соусе с базиликом',
     price: 5200, // ₪52
     category: 'pastas',
+    image: basilPastaImage,
     available: true,
   },
   {
@@ -334,6 +336,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Паста в томатно-сливочном соусе',
     price: 5200, // ₪52
     category: 'pastas',
+    image: rosePastaImage,
     available: true,
   },
   
