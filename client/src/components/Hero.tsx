@@ -2,6 +2,7 @@ import React from 'react';
 import { Translations } from '../types';
 import { Award, Utensils, Phone } from 'lucide-react';
 import pizzaImage from '@assets/IMG-20250605-WA0015_1749403007381.jpg';
+import pizzaPlusLogo from '@assets/1000181891_1749424433195.jpg';
 
 interface HeroProps {
   translations: Translations;
@@ -21,6 +22,14 @@ const Hero: React.FC<HeroProps> = ({ translations }) => {
       <div className="relative z-10 flex items-center justify-center h-full">
         <div className="text-center text-white px-4 max-w-4xl">
           <div className="mb-6">
+            {/* Pizza Plus Logo */}
+            <div className="mb-4">
+              <img 
+                src={pizzaPlusLogo} 
+                alt="Pizza Plus Logo" 
+                className="mx-auto h-24 w-auto rounded-lg shadow-lg bg-white/10 backdrop-blur-sm p-2"
+              />
+            </div>
             <div className="inline-flex items-center bg-yellow-500/20 backdrop-blur-sm rounded-full px-4 py-2 mb-4">
               <Award className="text-yellow-400 w-4 h-4 mr-2" />
               <span className="text-sm font-medium">{translations.kosherBadge}</span>
