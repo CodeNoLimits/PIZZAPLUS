@@ -1,6 +1,7 @@
 import { MenuItem, Translations } from '../types';
 import pizzaLImage from '@assets/image_1749422361511.png';
 import pizzaXLImage from '@assets/image_1749422609268.png';
+import fishChipsImage from '@assets/image_1749422785796.png';
 
 export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
@@ -374,6 +375,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Жареная рыба в хрустящей панировке с картофелем фри',
     price: 6800, // ₪68
     category: 'mains',
+    image: fishChipsImage,
     available: true,
   },
   {
