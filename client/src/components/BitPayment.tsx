@@ -31,6 +31,7 @@ const BitPayment: React.FC<BitPaymentProps> = ({
   });
   const [paymentMethod, setPaymentMethod] = useState<'bit' | 'card' | 'cash'>('bit');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
 
   const formatPrice = (price: number) => {
     return `${(price / 100).toFixed(2)}₪`;
@@ -40,9 +41,40 @@ const BitPayment: React.FC<BitPaymentProps> = ({
     return 'PZP' + Date.now().toString().slice(-8);
   };
 
-  const handleBitPayment = async () => {
-    setIsProcessing(true);
+  const validateForm = () => {
+    const errors: {[key: string]: string} = {};
     
+    if (!customerInfo.name.trim()) {
+      errors.name = currentLanguage === 'he' ? 'שם חובה' :
+                   currentLanguage === 'fr' ? 'Nom requis' :
+                   currentLanguage === 'ru' ? 'Имя обязательно' :
+                   'Name required';
+    }
+    
+    const phoneRegex = /^0[5-9][0-9]{8}$/;
+    if (!customerInfo.phone.trim()) {
+      errors.phone = currentLanguage === 'he' ? 'טלפון חובה' :
+                     currentLanguage === 'fr' ? 'Téléphone requis' :
+                     currentLanguage === 'ru' ? 'Телефон обязателен' :
+                     'Phone required';
+    } else if (!phoneRegex.test(customerInfo.phone.replace(/[\s-]/g, ''))) {
+      errors.phone = currentLanguage === 'he' ? 'מספר טלפון לא תקין (05X-XXXXXXX)' :
+                     currentLanguage === 'fr' ? 'Numéro de téléphone invalide (05X-XXXXXXX)' :
+                     currentLanguage === 'ru' ? 'Неверный номер телефона (05X-XXXXXXX)' :
+                     'Invalid phone number (05X-XXXXXXX)';
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleBitPayment = async () => {
+    if (!validateForm()) {
+      setIsProcessing(false);
+      return;
+    }
+    
+    setIsProcessing(true);
     const orderId = generateOrderId();
     const orderData = {
       orderId,
@@ -170,28 +202,53 @@ const BitPayment: React.FC<BitPaymentProps> = ({
             
             <div>
               <Label htmlFor="name">
-                {currentLanguage === 'he' ? 'שם מלא' : 'Full Name'}
+                {currentLanguage === 'he' ? 'שם מלא' : 
+                 currentLanguage === 'fr' ? 'Nom complet' :
+                 currentLanguage === 'ru' ? 'Полное имя' :
+                 'Full Name'}
               </Label>
               <Input
                 id="name"
                 value={customerInfo.name}
-                onChange={(e) => setCustomerInfo(prev => ({ ...prev, name: e.target.value }))}
-                placeholder={currentLanguage === 'he' ? 'הכנס שם מלא' : 'Enter full name'}
-                className="mt-1"
+                onChange={(e) => {
+                  setCustomerInfo(prev => ({ ...prev, name: e.target.value }));
+                  if (validationErrors.name) {
+                    setValidationErrors(prev => ({ ...prev, name: '' }));
+                  }
+                }}
+                placeholder={currentLanguage === 'he' ? 'הכנס שם מלא' : 
+                           currentLanguage === 'fr' ? 'Entrez le nom complet' :
+                           currentLanguage === 'ru' ? 'Введите полное имя' :
+                           'Enter full name'}
+                className={`mt-1 ${validationErrors.name ? 'border-red-500' : ''}`}
               />
+              {validationErrors.name && (
+                <p className="text-red-500 text-xs mt-1">{validationErrors.name}</p>
+              )}
             </div>
 
             <div>
               <Label htmlFor="phone">
-                {currentLanguage === 'he' ? 'טלפון' : 'Phone'}
+                {currentLanguage === 'he' ? 'טלפון' : 
+                 currentLanguage === 'fr' ? 'Téléphone' :
+                 currentLanguage === 'ru' ? 'Телефон' :
+                 'Phone'}
               </Label>
               <Input
                 id="phone"
                 value={customerInfo.phone}
-                onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
-                placeholder={currentLanguage === 'he' ? '05X-XXXXXXX' : '05X-XXXXXXX'}
-                className="mt-1"
+                onChange={(e) => {
+                  setCustomerInfo(prev => ({ ...prev, phone: e.target.value }));
+                  if (validationErrors.phone) {
+                    setValidationErrors(prev => ({ ...prev, phone: '' }));
+                  }
+                }}
+                placeholder="05X-XXXXXXX"
+                className={`mt-1 ${validationErrors.phone ? 'border-red-500' : ''}`}
               />
+              {validationErrors.phone && (
+                <p className="text-red-500 text-xs mt-1">{validationErrors.phone}</p>
+              )}
             </div>
 
             <div>
@@ -268,22 +325,10 @@ const BitPayment: React.FC<BitPaymentProps> = ({
             </div>
           </div>
 
-          {/* Validation Messages */}
-          {(!customerInfo.name || !customerInfo.phone) && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-600 text-sm">
-                {currentLanguage === 'he' ? 'אנא מלא שם וטלפון' : 
-                 currentLanguage === 'fr' ? 'Veuillez remplir le nom et le téléphone' :
-                 currentLanguage === 'ru' ? 'Пожалуйста, заполните имя и телефон' :
-                 'Please fill in name and phone'}
-              </p>
-            </div>
-          )}
-
           {/* Payment Button */}
           <Button
             className="w-full h-12 text-lg"
-            disabled={!customerInfo.name || !customerInfo.phone || isProcessing}
+            disabled={isProcessing}
             onClick={() => {
               if (paymentMethod === 'bit') handleBitPayment();
               else if (paymentMethod === 'card') handleCardPayment();
