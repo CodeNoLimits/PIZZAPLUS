@@ -13,6 +13,7 @@ import soupImage from '@assets/image_1749423822674.png';
 import chocolateSticksImage from '@assets/image_1749423875451.png';
 import largeFriesImage from '@assets/image_1749424100080.png';
 import cheeseCrustImage from '@assets/image_1749424147684.png';
+import smallFriesImage from '@assets/image_1749424260009.png';
 
 export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
@@ -454,6 +455,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Маленькая порция',
     price: 1500, // ₪15
     category: 'sides',
+    image: smallFriesImage,
     available: true,
   },
   {
