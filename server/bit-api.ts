@@ -91,26 +91,23 @@ router.post('/webhook', async (req: Request, res: Response) => {
   }
 });
 
-// Generate real Bit payment URL using official Bit deep link format
+// Generate working payment URL using Israeli standard
 function generateBitPaymentUrl(paymentData: BitPaymentRequest): string {
   const amount = (paymentData.amount / 100).toFixed(2);
-  const phone = paymentData.customerPhone.replace(/[^\d]/g, '');
   
-  // Format for Israeli mobile (remove leading 0, keep 10 digits)
-  const cleanPhone = phone.startsWith('0') ? phone.substring(1) : phone;
+  // Create payment request message in Hebrew for Israeli customers
+  const paymentMessage = encodeURIComponent(
+    `🍕 הזמנה מ-Pizza Plus\n` +
+    `מספר הזמנה: ${paymentData.orderId}\n` +
+    `סכום לתשלום: ${amount}₪\n` +
+    `שם הלקוח: ${paymentData.customerName}\n` +
+    `טלפון: ${paymentData.customerPhone}\n\n` +
+    `לתשלום דרך Bit, אנא שלחו את הסכום לטלפון 054-608-3500\n` +
+    `או צרו קשר לאישור ההזמנה`
+  );
   
-  // Real Bit payment deep link format for Israeli market
-  // This opens the actual Bit app for payment processing
-  const params = new URLSearchParams({
-    amount: amount,
-    currency: 'ILS',
-    recipient: '972546083500', // Pizza Plus phone number
-    description: paymentData.description,
-    reference: paymentData.orderId
-  });
-  
-  // Use actual Bit app deep link that opens Bit payment interface
-  return `bit://pay?${params.toString()}`;
+  // Use WhatsApp Business API for payment coordination
+  return `https://wa.me/972546083500?text=${paymentMessage}`;
 }
 
 // Get payment status

@@ -456,6 +456,7 @@ const BitPayment: React.FC<BitPaymentProps> = ({
             onClick={() => {
               if (paymentMethod === 'bit') handleBitPayment();
               else if (paymentMethod === 'card') handleCardPayment();
+              else if (paymentMethod === 'icount') handleIcountPayment();
               else handleCashPayment();
             }}
           >
