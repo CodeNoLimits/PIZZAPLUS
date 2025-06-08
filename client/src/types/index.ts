@@ -53,6 +53,7 @@ export interface Translations {
   mains: string;
   sides: string;
   desserts: string;
+  drinks: string;
   
   // Cart
   cartTitle: string;

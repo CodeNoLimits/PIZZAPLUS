@@ -24,6 +24,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({ translations, currentLanguage
     { id: 'mains', label: translations.mains },
     { id: 'sides', label: translations.sides },
     { id: 'desserts', label: translations.desserts },
+    { id: 'drinks', label: translations.drinks },
   ];
 
   const filteredItems = activeCategory === 'all' 
