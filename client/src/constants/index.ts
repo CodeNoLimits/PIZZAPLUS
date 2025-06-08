@@ -12,6 +12,7 @@ import garlicBreadImage from '@assets/image_1749423760035.png';
 import soupImage from '@assets/image_1749423822674.png';
 import chocolateSticksImage from '@assets/image_1749423875451.png';
 import largeFriesImage from '@assets/image_1749424100080.png';
+import cheeseCrustImage from '@assets/image_1749424147684.png';
 
 export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
@@ -406,6 +407,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Пицца с корочкой, фаршированной сыром',
     price: 7200, // ₪72
     category: 'mains',
+    image: cheeseCrustImage,
     available: true,
   },
   {
