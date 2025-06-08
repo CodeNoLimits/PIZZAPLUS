@@ -5,6 +5,7 @@ import fishChipsImage from '@assets/image_1749422785796.png';
 import smallSaladImage from '@assets/image_1749422920149.png';
 import largeSaladImage from '@assets/image_1749423026096.png';
 import mushroomCreamImage from '@assets/image_1749423091982.png';
+import personalPizzaImage from '@assets/image_1749423174355.png';
 
 export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
@@ -284,6 +285,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Персональная пицца с томатным соусом и моцареллой',
     price: 3500, // ₪35
     category: 'pizzas',
+    image: personalPizzaImage,
     available: true,
     toppings: ['tomatoes', 'onions', 'olives-green', 'olives-black', 'mushrooms', 'hot-pepper', 'bulgarian', 'eggplant', 'sweet-potato', 'corn', 'pineapple', 'tuna', 'pesto'],
     toppingPrice: 600, // ₪6 per topping (20% more than CSV ₪5)
