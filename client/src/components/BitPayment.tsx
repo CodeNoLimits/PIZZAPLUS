@@ -29,7 +29,7 @@ const BitPayment: React.FC<BitPaymentProps> = ({
     email: '',
     address: ''
   });
-  const [paymentMethod, setPaymentMethod] = useState<'bit' | 'card' | 'cash'>('bit');
+  const [paymentMethod, setPaymentMethod] = useState<'bit' | 'card' | 'icount' | 'cash'>('bit');
   const [isProcessing, setIsProcessing] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
 
@@ -160,7 +160,7 @@ const BitPayment: React.FC<BitPaymentProps> = ({
     };
 
     try {
-      console.log('Creating Tranzila payment:', orderData);
+      console.log('Creating PayPal payment:', orderData);
       
       const response = await fetch('/api/tranzila/create-payment', {
         method: 'POST',
@@ -171,10 +171,10 @@ const BitPayment: React.FC<BitPaymentProps> = ({
       });
 
       const result = await response.json();
-      console.log('Tranzila payment response:', result);
+      console.log('PayPal payment response:', result);
 
       if (result.success && result.paymentUrl) {
-        console.log('Opening Tranzila payment URL:', result.paymentUrl);
+        console.log('Opening PayPal payment URL:', result.paymentUrl);
         
         const paymentWindow = window.open(result.paymentUrl, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
         
@@ -191,7 +191,6 @@ const BitPayment: React.FC<BitPaymentProps> = ({
           return;
         }
         
-        // Close the payment dialog
         onClose();
         setIsProcessing(false);
         
@@ -201,7 +200,7 @@ const BitPayment: React.FC<BitPaymentProps> = ({
       }
       
     } catch (error) {
-      console.error('Tranzila payment error:', error);
+      console.error('PayPal payment error:', error);
       setIsProcessing(false);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       alert(currentLanguage === 'he' 
@@ -210,6 +209,76 @@ const BitPayment: React.FC<BitPaymentProps> = ({
         ? `Erreur de paiement: ${errorMessage}. Veuillez réessayer`
         : currentLanguage === 'ru'
         ? `Ошибка платежа: ${errorMessage}. Пожалуйста, попробуйте еще раз`
+        : `Payment error: ${errorMessage}. Please try again`
+      );
+    }
+  };
+
+  const handleIcountPayment = async () => {
+    if (!validateForm()) {
+      setIsProcessing(false);
+      return;
+    }
+    
+    setIsProcessing(true);
+    const orderId = generateOrderId();
+    const orderData = {
+      orderId,
+      amount: total,
+      currency: 'ILS',
+      customerName: customerInfo.name,
+      customerPhone: customerInfo.phone,
+      customerEmail: customerInfo.email,
+      description: `Pizza Plus Order #${orderId}`,
+      items: cartItems.map(item => ({
+        name: item.nameHe,
+        quantity: item.quantity,
+        price: item.totalPrice
+      }))
+    };
+
+    try {
+      console.log('Creating Icount payment:', orderData);
+      
+      const response = await fetch('/api/icount/create-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const result = await response.json();
+      console.log('Icount payment response:', result);
+
+      if (result.success && result.paymentUrl) {
+        console.log('Opening Icount payment URL:', result.paymentUrl);
+        
+        const paymentWindow = window.open(result.paymentUrl, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+        
+        if (!paymentWindow) {
+          alert(currentLanguage === 'he' 
+            ? 'חוסם חלונות קופצים מונע את התשלום. אנא אפשר חלונות קופצים ונסה שוב'
+            : 'Popup blocker is preventing payment. Please allow popups and try again'
+          );
+          setIsProcessing(false);
+          return;
+        }
+        
+        onClose();
+        setIsProcessing(false);
+        
+      } else {
+        console.error('Payment failed:', result);
+        throw new Error(result.error || 'Payment creation failed');
+      }
+      
+    } catch (error) {
+      console.error('Icount payment error:', error);
+      setIsProcessing(false);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(currentLanguage === 'he' 
+        ? `שגיאה בתשלום: ${errorMessage}. אנא נסה שוב`
         : `Payment error: ${errorMessage}. Please try again`
       );
     }

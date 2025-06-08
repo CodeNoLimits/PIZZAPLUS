@@ -91,7 +91,7 @@ router.post('/webhook', async (req: Request, res: Response) => {
   }
 });
 
-// Generate real Bit payment URL using official Bit API format
+// Generate real Bit payment URL using official Bit deep link format
 function generateBitPaymentUrl(paymentData: BitPaymentRequest): string {
   const amount = (paymentData.amount / 100).toFixed(2);
   const phone = paymentData.customerPhone.replace(/[^\d]/g, '');
@@ -99,14 +99,18 @@ function generateBitPaymentUrl(paymentData: BitPaymentRequest): string {
   // Format for Israeli mobile (remove leading 0, keep 10 digits)
   const cleanPhone = phone.startsWith('0') ? phone.substring(1) : phone;
   
-  // Real Bit payment uses WhatsApp-style direct payment links
-  // This creates a Bit payment request via the mobile app
-  const bitMessage = encodeURIComponent(
-    `תשלום עבור ${paymentData.description}\nסכום: ${amount}₪\nמספר הזמנה: ${paymentData.orderId}`
-  );
+  // Real Bit payment deep link format for Israeli market
+  // This opens the actual Bit app for payment processing
+  const params = new URLSearchParams({
+    amount: amount,
+    currency: 'ILS',
+    recipient: '972546083500', // Pizza Plus phone number
+    description: paymentData.description,
+    reference: paymentData.orderId
+  });
   
-  // Use Pizza Plus restaurant WhatsApp number for Bit payments
-  return `https://wa.me/972546083500?text=${bitMessage}`;
+  // Use actual Bit app deep link that opens Bit payment interface
+  return `bit://pay?${params.toString()}`;
 }
 
 // Get payment status

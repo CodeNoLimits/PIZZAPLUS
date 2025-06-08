@@ -56,30 +56,29 @@ router.post('/create-payment', async (req: Request, res: Response) => {
   }
 });
 
-// Generate Tranzila payment URL (real Israeli credit card processor)
+// Generate PayPal payment URL (widely used in Israel)
 function generateTranzilaPaymentUrl(paymentData: TranzilaPaymentRequest, transactionId: string): string {
   const amount = (paymentData.amount / 100).toFixed(2);
   
-  // Tranzila requires specific parameters for Israeli market
+  // PayPal Checkout parameters for Israeli market
   const params = new URLSearchParams({
-    supplier: 'demo', // Will need real supplier ID from Tranzila
-    sum: amount,
-    currency: '1', // ILS currency code for Tranzila
-    cred_type: '1', // Regular credit card
-    tranmode: 'AK', // Authorization + Capture
-    myid: paymentData.orderId,
-    npay: '1', // Number of payments
-    contact: paymentData.customerName,
-    email: paymentData.customerEmail || '',
-    phone: paymentData.customerPhone,
-    remarks: paymentData.description,
-    success_url: `${process.env.DOMAIN || 'https://pizza-plus.replit.app'}/payment-success`,
-    fail_url: `${process.env.DOMAIN || 'https://pizza-plus.replit.app'}/payment-failed`,
-    notify_url: `${process.env.DOMAIN || 'https://pizza-plus.replit.app'}/api/tranzila/webhook`
+    cmd: '_xclick',
+    business: 'payments@pizzaplus.co.il', // Will need real PayPal business email
+    item_name: paymentData.description,
+    item_number: paymentData.orderId,
+    amount: amount,
+    currency_code: 'ILS',
+    return: `${process.env.DOMAIN || 'https://pizza-plus.replit.app'}/payment-success`,
+    cancel_return: `${process.env.DOMAIN || 'https://pizza-plus.replit.app'}/payment-failed`,
+    notify_url: `${process.env.DOMAIN || 'https://pizza-plus.replit.app'}/api/tranzila/webhook`,
+    rm: '2', // Return method
+    no_shipping: '1', // No shipping required
+    charset: 'utf-8',
+    lc: 'IL' // Israel locale
   });
   
-  // Real Tranzila payment gateway URL
-  return `https://secure5.tranzila.com/cgi-bin/tranzila71u.cgi?${params.toString()}`;
+  // PayPal payment gateway URL (works reliably in Israel)
+  return `https://www.paypal.com/cgi-bin/webscr?${params.toString()}`;
 }
 
 // Webhook for payment status updates
