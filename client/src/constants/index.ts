@@ -4,6 +4,7 @@ import pizzaXLImage from '@assets/image_1749422609268.png';
 import fishChipsImage from '@assets/image_1749422785796.png';
 import smallSaladImage from '@assets/image_1749422920149.png';
 import largeSaladImage from '@assets/image_1749423026096.png';
+import mushroomCreamImage from '@assets/image_1749423091982.png';
 
 export const PRIMARY_COLOR = '#FF6347';
 export const SECONDARY_COLOR = '#2E7D32';
@@ -315,6 +316,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Паста в сливочном соусе со свежими грибами',
     price: 5200, // ₪52
     category: 'pastas',
+    image: mushroomCreamImage,
     available: true,
   },
   {
