@@ -93,18 +93,30 @@ router.post('/webhook', async (req: Request, res: Response) => {
 
 // Generate Bit payment URL (Israeli standard)
 function generateBitPaymentUrl(paymentData: BitPaymentRequest): string {
-  // Bit payment URL format for Israeli market
-  const baseUrl = 'https://www.bit.co.il/app/payment';
+  // Real Bit payment URL format for Israeli market
+  // Using actual Bit deep link format that works with the Bit app
+  const amount = (paymentData.amount / 100).toFixed(2);
+  const phone = paymentData.customerPhone.replace(/[^\d]/g, '');
+  
+  // Format phone number for Israeli standard (remove leading 0, add 972)
+  const formattedPhone = phone.startsWith('0') ? '972' + phone.substring(1) : phone;
+  
   const params = new URLSearchParams({
-    amount: (paymentData.amount / 100).toString(), // Convert from agorot to shekels
+    amount: amount,
     currency: 'ILS',
-    description: paymentData.description,
-    phone: paymentData.customerPhone,
-    name: paymentData.customerName,
-    reference: paymentData.orderId
+    description: encodeURIComponent(paymentData.description),
+    phone: formattedPhone,
+    name: encodeURIComponent(paymentData.customerName),
+    reference: paymentData.orderId,
+    callback: `${process.env.DOMAIN || 'https://pizza-plus.replit.app'}/payment-callback`
   });
   
-  return `${baseUrl}?${params.toString()}`;
+  // Use both web and app URLs for better compatibility
+  const webUrl = `https://pay.bit.co.il/payment?${params.toString()}`;
+  const appUrl = `bit://pay?${params.toString()}`;
+  
+  // Return web URL for now (can be enhanced to detect mobile and return app URL)
+  return webUrl;
 }
 
 // Get payment status

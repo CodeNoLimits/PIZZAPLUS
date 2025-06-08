@@ -60,6 +60,8 @@ const BitPayment: React.FC<BitPaymentProps> = ({
     };
 
     try {
+      console.log('Sending Bit payment request:', orderData);
+      
       // Call our Bit payment API
       const response = await fetch('/api/bit/create-payment', {
         method: 'POST',
@@ -69,29 +71,51 @@ const BitPayment: React.FC<BitPaymentProps> = ({
         body: JSON.stringify(orderData)
       });
 
+      console.log('Response status:', response.status);
       const result = await response.json();
+      console.log('Response data:', result);
       
       if (result.success && result.paymentUrl) {
-        // Open Bit payment URL
-        window.open(result.paymentUrl, '_blank');
+        console.log('Opening Bit payment URL:', result.paymentUrl);
         
-        setTimeout(() => {
-          setIsProcessing(false);
-          onClose();
+        // Open Bit payment URL
+        const newWindow = window.open(result.paymentUrl, '_blank');
+        
+        if (!newWindow) {
           alert(currentLanguage === 'he' 
-            ? 'תשלום נשלח! אנא השלם את התשלום באפליקציית Bit'
-            : 'Payment sent! Please complete payment in Bit app'
+            ? 'חלון חדש נחסם. אנא אפשר חלונות קופצים ונסה שוב'
+            : 'Popup blocked. Please allow popups and try again'
           );
-        }, 1000);
+          setIsProcessing(false);
+          return;
+        }
+        
+        setIsProcessing(false);
+        onClose();
+        alert(currentLanguage === 'he' 
+          ? 'תשלום נשלח! אנא השלם את התשלום באפליקציית Bit'
+          : currentLanguage === 'fr' 
+          ? 'Paiement envoyé! Veuillez compléter le paiement dans l\'app Bit'
+          : currentLanguage === 'ru'
+          ? 'Платеж отправлен! Пожалуйста, завершите платеж в приложении Bit'
+          : 'Payment sent! Please complete payment in Bit app'
+        );
       } else {
+        console.error('Payment failed:', result);
         throw new Error(result.error || 'Payment creation failed');
       }
       
     } catch (error) {
+      console.error('Bit payment error:', error);
       setIsProcessing(false);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       alert(currentLanguage === 'he' 
-        ? 'שגיאה בתשלום. אנא נסה שוב'
-        : 'Payment error. Please try again'
+        ? `שגיאה בתשלום: ${errorMessage}. אנא נסה שוב`
+        : currentLanguage === 'fr'
+        ? `Erreur de paiement: ${errorMessage}. Veuillez réessayer`
+        : currentLanguage === 'ru'
+        ? `Ошибка платежа: ${errorMessage}. Пожалуйста, попробуйте еще раз`
+        : `Payment error: ${errorMessage}. Please try again`
       );
     }
   };
@@ -244,6 +268,18 @@ const BitPayment: React.FC<BitPaymentProps> = ({
             </div>
           </div>
 
+          {/* Validation Messages */}
+          {(!customerInfo.name || !customerInfo.phone) && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-sm">
+                {currentLanguage === 'he' ? 'אנא מלא שם וטלפון' : 
+                 currentLanguage === 'fr' ? 'Veuillez remplir le nom et le téléphone' :
+                 currentLanguage === 'ru' ? 'Пожалуйста, заполните имя и телефон' :
+                 'Please fill in name and phone'}
+              </p>
+            </div>
+          )}
+
           {/* Payment Button */}
           <Button
             className="w-full h-12 text-lg"
@@ -254,10 +290,27 @@ const BitPayment: React.FC<BitPaymentProps> = ({
               else handleCashPayment();
             }}
           >
-            {isProcessing 
-              ? (currentLanguage === 'he' ? 'מעבד...' : 'Processing...')
-              : `${currentLanguage === 'he' ? 'שלם' : 'Pay'} ${formatPrice(total)}`
-            }
+            {isProcessing ? (
+              currentLanguage === 'he' ? 'מעבד...' : 
+              currentLanguage === 'fr' ? 'Traitement...' :
+              currentLanguage === 'ru' ? 'Обработка...' :
+              'Processing...'
+            ) : (
+              <>
+                {paymentMethod === 'bit' && (currentLanguage === 'he' ? `שלם עם Bit ${formatPrice(total)}` : 
+                  currentLanguage === 'fr' ? `Payer avec Bit ${formatPrice(total)}` :
+                  currentLanguage === 'ru' ? `Оплатить через Bit ${formatPrice(total)}` :
+                  `Pay with Bit ${formatPrice(total)}`)}
+                {paymentMethod === 'card' && (currentLanguage === 'he' ? `שלם בכרטיס ${formatPrice(total)}` : 
+                  currentLanguage === 'fr' ? `Payer par carte ${formatPrice(total)}` :
+                  currentLanguage === 'ru' ? `Оплатить картой ${formatPrice(total)}` :
+                  `Pay with Card ${formatPrice(total)}`)}
+                {paymentMethod === 'cash' && (currentLanguage === 'he' ? `אשר הזמנה ${formatPrice(total)}` : 
+                  currentLanguage === 'fr' ? `Confirmer commande ${formatPrice(total)}` :
+                  currentLanguage === 'ru' ? `Подтвердить заказ ${formatPrice(total)}` :
+                  `Confirm Order ${formatPrice(total)}`)}
+              </>
+            )}
           </Button>
         </CardContent>
       </div>
