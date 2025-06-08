@@ -144,7 +144,8 @@ const Cart: React.FC<CartProps> = ({
                 className="w-full bg-green-600 hover:bg-green-700 text-white py-3"
                 onClick={() => {
                   const message = generateWhatsAppMessage();
-                  window.open(`https://wa.me/972546083500?text=${message}`, '_blank');
+                  const whatsappUrl = `https://wa.me/972546083500?text=${message}`;
+                  window.open(whatsappUrl, '_blank');
                 }}
               >
                 <MessageCircle className="w-4 h-4 mr-2" />

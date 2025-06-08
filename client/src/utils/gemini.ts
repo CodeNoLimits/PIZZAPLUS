@@ -25,37 +25,46 @@ Restaurant Details:
 - Hours: Sun-Thu 11:00-23:00, Fri 11:00-15:00, Sat Night 20:00-23:00
 - Kosher: Certified by Chief Rabbinate of Israel (בד״ץ הרבנות הראשית לישראל)
 
+COMPLETE MENU WITH EXACT PRICES:
+
 PIZZAS:
-- מגש L (Pizza L 36cm): ₪45 + ₪6 per topping
-- מגש אישי (Personal Pizza): ₪28 + ₪6 per topping
+- מגש L (Pizza L 36cm): ₪52 base price
+- מגש אישי (Personal Pizza): ₪35 base price
+
+PIZZA TOPPINGS:
+For Large Pizza (₪7 each): עגבניות, בצל, זיתים ירוקים, זיתים שחורים, פטריות, פלפל חריף, בולגרית (₪10), חציל, בטטה, תירס, אננס, טונה (₪10), פסטו
+For Personal Pizza (₪5 each): עגבניות, בצל, זיתים ירוקים, זיתים שחורים, פטריות, פלפל חריף, בולגרית (₪8), חציל, בטטה, תירס, אננס, טונה (₪8), פסטו
+For Half Large Pizza (₪5 each per half): Same toppings, בולגרית (₪7), טונה (₪7)
 
 PASTAS:
-- רוטב עגבניות ובזיליקום (Tomato & Basil): ₪45
-- שמנת פטריות (Mushroom Cream): ₪45
-- רוזה (Rosé - tomato & cream): ₪45
+- רוטב עגבניות ובזיליקום (Tomato & Basil): ₪52
+- שמנת פטריות (Mushroom Cream): ₪52
+- רוזה (Rosé - tomato & cream): ₪52
 
 SALADS:
-- סלט קטן (Small Salad): ₪35 + toppings
-- סלט גדול (Large Salad): ₪50 + toppings
+- סלט קטן (Small Salad): ₪39
+- סלט גדול (Large Salad): ₪55
+Salad Toppings: ביצה קשה, טונה, אבוקדו, בולגרית
 
-MAIN DISHES:
-- פיש & צ'יפס (Fish & Chips): ₪61
-- צ'יז קראסט (Cheese Crust - stuffed chicken): ₪63
-- מרקים בעונה (Seasonal Soups): ₪25
+SPECIALS:
+- פיש & צ'יפס (Fish & Chips): ₪68
+- צ'יז קראסט (Cheese Crust Pizza with cheese-stuffed crust): ₪72
+- מרקים בעונה (Seasonal Soups): ₪32
+- מקלות שוקולד (Chocolate Sticks): ₪32
 
 SIDES:
-- צ'יפס קטן (Small Fries): ₪12
-- צ'יפס גדול (Large Fries): ₪18
-- לחם שום (Garlic Bread): ₪12
+- צ'יפס קטן (Small Chips): ₪15
+- צ'יפס גדול (Large Chips): ₪24
+- לחם שום (Garlic Bread): ₪22
 
-DESSERTS:
-- מקלות שוקולד (Chocolate Sticks): ₪25
+DRINKS:
+- בקבוק גדול (Large Bottle): ₪15
+- בקבוק קטן (Small Bottle): ₪10
+- פחית (Can): ₪8
 
-TOPPINGS (₪5-7 each):
-Pizza: עגבניות, בצל, פטריות, תירס, זיתים ירוקים, זיתים שחורים, בולגרית, טונה
-Salad: ביצה קשה, טונה, אבוקדו, בולגרית
+Website Features: Online menu with cart, multilingual support (Hebrew/English/French/Russian), interactive Google Maps, real-time AI chat, WhatsApp ordering, authentic restaurant photos.
 
-Always respond in ${language === 'he' ? 'Hebrew' : 'English'}. Be helpful, friendly, and encourage WhatsApp orders at 054-6083500.`;
+Always respond in ${language === 'he' ? 'Hebrew' : language === 'en' ? 'English' : language === 'fr' ? 'French' : 'Russian'}. Be helpful, friendly, and encourage orders via WhatsApp 054-6083500. Help calculate prices with toppings and guide ordering.`;
 
     const chat = model.startChat({
       history: history,

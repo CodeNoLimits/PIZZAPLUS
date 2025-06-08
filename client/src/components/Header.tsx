@@ -65,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({
                 <i className="fas fa-chevron-down text-xs"></i>
               </button>
               {langMenuOpen && (
-                <div className="absolute top-full right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[80px]">
+                <div className="absolute top-full right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[100px]">
                   <button
                     onClick={() => {
                       onLanguageChange('he');
@@ -83,6 +83,24 @@ const Header: React.FC<HeaderProps> = ({
                     className="w-full px-3 py-2 text-sm hover:bg-gray-50 text-right"
                   >
                     English
+                  </button>
+                  <button
+                    onClick={() => {
+                      onLanguageChange('fr');
+                      setLangMenuOpen(false);
+                    }}
+                    className="w-full px-3 py-2 text-sm hover:bg-gray-50 text-right"
+                  >
+                    Français
+                  </button>
+                  <button
+                    onClick={() => {
+                      onLanguageChange('ru');
+                      setLangMenuOpen(false);
+                    }}
+                    className="w-full px-3 py-2 text-sm hover:bg-gray-50 text-right"
+                  >
+                    Русский
                   </button>
                 </div>
               )}

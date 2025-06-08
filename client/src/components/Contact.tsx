@@ -98,17 +98,27 @@ const Contact: React.FC<ContactProps> = ({ translations }) => {
             </div>
           </div>
 
-          {/* Map placeholder */}
+          {/* Interactive Google Map */}
           <div className="relative">
-            <Card className="bg-gray-700 h-96">
-              <CardContent className="h-full flex items-center justify-center p-6">
-                <div className="text-center">
-                  <MapPin className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                  <p className="text-gray-400">מפה אינטראקטיבית של המיקום</p>
-                  <p className="text-sm text-gray-500 mt-2">{translations.address}</p>
-                </div>
+            <Card className="bg-gray-700 h-96 overflow-hidden">
+              <CardContent className="p-0 h-full">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3402.3426762891854!2d35.22726831516117!3d31.71642608130532!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1502d73b1e8b49999%3A0x6f4d2a45c6d8e123!2s2%20Ish%20Matzliach%20St%2C%20Har%20Homa%2C%20Jerusalem!5e0!3m2!1sen!2sil!4v1674567890123!5m2!1sen!2sil"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Pizza Plus Restaurant Location"
+                  className="rounded-lg"
+                />
               </CardContent>
             </Card>
+            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg">
+              <p className="text-sm font-semibold text-gray-800">פיצה פלוס</p>
+              <p className="text-xs text-gray-600">איש מצלח 2, הר חומה</p>
+            </div>
           </div>
         </div>
       </div>

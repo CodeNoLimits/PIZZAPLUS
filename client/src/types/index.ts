@@ -1,4 +1,4 @@
-export type Language = 'he' | 'en';
+export type Language = 'he' | 'en' | 'fr' | 'ru';
 
 export interface MenuItem {
   id: string;
