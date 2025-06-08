@@ -110,28 +110,12 @@ const BitPayment: React.FC<BitPaymentProps> = ({
       if (result.success && result.paymentUrl) {
         console.log('Opening Bit payment URL:', result.paymentUrl);
         
-        // Open Bit payment URL
-        const newWindow = window.open(result.paymentUrl, '_blank');
-        
-        if (!newWindow) {
-          alert(currentLanguage === 'he' 
-            ? 'חלון חדש נחסם. אנא אפשר חלונות קופצים ונסה שוב'
-            : 'Popup blocked. Please allow popups and try again'
-          );
-          setIsProcessing(false);
-          return;
-        }
-        
-        setIsProcessing(false);
+        // Close dialog first
         onClose();
-        alert(currentLanguage === 'he' 
-          ? 'תשלום נשלח! אנא השלם את התשלום באפליקציית Bit'
-          : currentLanguage === 'fr' 
-          ? 'Paiement envoyé! Veuillez compléter le paiement dans l\'app Bit'
-          : currentLanguage === 'ru'
-          ? 'Платеж отправлен! Пожалуйста, завершите платеж в приложении Bit'
-          : 'Payment sent! Please complete payment in Bit app'
-        );
+        setIsProcessing(false);
+        
+        // Redirect directly to WhatsApp (works better than window.open for mobile)
+        window.location.href = result.paymentUrl;
       } else {
         console.error('Payment failed:', result);
         throw new Error(result.error || 'Payment creation failed');
