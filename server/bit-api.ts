@@ -1,7 +1,17 @@
 import { Router, Request, Response } from 'express';
 import { storage } from './storage';
+import crypto from 'crypto';
+import axios from 'axios';
 
 const router = Router();
+
+// Configuration Bit basée sur les exemples fournis
+const BIT_CONFIG = {
+  merchantId: process.env.BIT_MERCHANT_ID,
+  apiKey: process.env.BIT_API_KEY,
+  apiSecret: process.env.BIT_API_SECRET,
+  apiUrl: 'https://api.bit-pay.co.il/v1'
+};
 
 // Bit Payment API Integration for Israeli payments
 interface BitPaymentRequest {

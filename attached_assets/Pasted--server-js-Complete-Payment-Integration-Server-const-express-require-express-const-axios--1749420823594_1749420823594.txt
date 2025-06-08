@@ -1,0 +1,459 @@
+// server.js - Complete Payment Integration Server
+const express = require('express');
+const axios = require('axios');
+const crypto = require('crypto');
+const cors = require('cors');
+const path = require('path');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.static('public'));
+
+// ===================== BIT PAYMENT INTEGRATION =====================
+const BIT_CONFIG = {
+  merchantId: process.env.BIT_MERCHANT_ID,
+  apiKey: process.env.BIT_API_KEY,
+  apiSecret: process.env.BIT_API_SECRET,
+  apiUrl: 'https://api.bit-pay.co.il/v1'
+};
+
+// Create Bit Payment
+app.post('/api/bit/create-payment', async (req, res) => {
+  try {
+    const { amount, description, customerEmail } = req.body;
+    
+    const payload = {
+      amount: parseFloat(amount),
+      currency: 'ILS',
+      description: description,
+      email: customerEmail,
+      successUrl: `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/success`,
+      cancelUrl: `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/cancel`,
+      notifyUrl: `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/api/bit/webhook`
+    };
+    
+    // Create signature
+    const signature = crypto
+      .createHmac('sha256', BIT_CONFIG.apiSecret)
+      .update(JSON.stringify(payload))
+      .digest('hex');
+    
+    const response = await axios.post(
+      `${BIT_CONFIG.apiUrl}/payments`,
+      payload,
+      {
+        headers: {
+          'X-API-Key': BIT_CONFIG.apiKey,
+          'X-Signature': signature,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    
+    res.json({ 
+      success: true,
+      paymentUrl: response.data.paymentUrl,
+      paymentId: response.data.paymentId 
+    });
+  } catch (error) {
+    console.error('Bit error:', error.response?.data || error.message);
+    res.status(500).json({ 
+      success: false,
+      error: error.response?.data?.message || error.message 
+    });
+  }
+});
+
+// Bit Webhook Handler
+app.post('/api/bit/webhook', (req, res) => {
+  try {
+    const signature = req.headers['x-signature'];
+    const payload = JSON.stringify(req.body);
+    
+    const expectedSignature = crypto
+      .createHmac('sha256', BIT_CONFIG.apiSecret)
+      .update(payload)
+      .digest('hex');
+    
+    if (signature === expectedSignature) {
+      console.log('Bit webhook received:', req.body);
+      // Handle payment status update
+      res.status(200).send('OK');
+    } else {
+      res.status(401).send('Invalid signature');
+    }
+  } catch (error) {
+    res.status(500).send('Webhook error');
+  }
+});
+
+// ===================== ICOUNT INTEGRATION =====================
+const ICOUNT_CONFIG = {
+  companyId: process.env.ICOUNT_COMPANY_ID,
+  apiUser: process.env.ICOUNT_API_USER,
+  apiPass: process.env.ICOUNT_API_PASS,
+  apiUrl: 'https://api.icount.co.il/api/v3.php'
+};
+
+// Create iCount Invoice
+app.post('/api/icount/create-invoice', async (req, res) => {
+  try {
+    const { clientName, amount, items } = req.body;
+    
+    const params = new URLSearchParams({
+      cid: ICOUNT_CONFIG.companyId,
+      user: ICOUNT_CONFIG.apiUser,
+      pass: ICOUNT_CONFIG.apiPass,
+      r: 'invoice/create',
+      client_name: clientName,
+      sum: amount,
+      items: JSON.stringify(items || [{
+        description: 'תשלום',
+        quantity: 1,
+        price: amount
+      }])
+    });
+    
+    const response = await axios.post(
+      ICOUNT_CONFIG.apiUrl,
+      params,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    );
+    
+    if (response.data.status) {
+      res.json({ 
+        success: true,
+        invoiceId: response.data.docnum,
+        invoiceUrl: response.data.doc_url 
+      });
+    } else {
+      throw new Error(response.data.reason || 'Failed to create invoice');
+    }
+  } catch (error) {
+    console.error('iCount error:', error.response?.data || error.message);
+    res.status(500).json({ 
+      success: false,
+      error: error.message 
+    });
+  }
+});
+
+// Get iCount Invoice Status
+app.get('/api/icount/invoice/:id', async (req, res) => {
+  try {
+    const params = new URLSearchParams({
+      cid: ICOUNT_CONFIG.companyId,
+      user: ICOUNT_CONFIG.apiUser,
+      pass: ICOUNT_CONFIG.apiPass,
+      r: 'invoice/get',
+      docnum: req.params.id
+    });
+    
+    const response = await axios.post(
+      ICOUNT_CONFIG.apiUrl,
+      params,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    );
+    
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ===================== TRANZILLA INTEGRATION =====================
+const TRANZILLA_CONFIG = {
+  terminal: process.env.TRANZILLA_TERMINAL,
+  password: process.env.TRANZILLA_PASSWORD,
+  apiUrl: 'https://secure5.tranzila.com/cgi-bin/tranzila71u.cgi',
+  // For tokenization
+  tokenUrl: 'https://secure5.tranzila.com/cgi-bin/tranzila71t.cgi'
+};
+
+// Process Tranzilla Payment
+app.post('/api/tranzilla/process-payment', async (req, res) => {
+  try {
+    const { creditCard, cvv, expMonth, expYear, amount, holderId } = req.body;
+    
+    // Basic validation
+    if (!creditCard || creditCard.length < 13) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Invalid credit card number' 
+      });
+    }
+    
+    const params = new URLSearchParams({
+      terminal: TRANZILLA_CONFIG.terminal,
+      TranzilaPW: TRANZILLA_CONFIG.password,
+      ccno: creditCard,
+      cvv: cvv,
+      expmonth: expMonth.padStart(2, '0'),
+      expyear: expYear,
+      sum: amount,
+      currency: '1', // 1 = ILS
+      holderId: holderId,
+      // Additional recommended parameters
+      myid: Date.now().toString(), // Unique transaction ID
+      email: req.body.email || '',
+      phone: req.body.phone || '',
+      remarks: req.body.description || 'Payment',
+      notify_url: `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/api/tranzilla/webhook`
+    });
+    
+    const response = await axios.post(
+      TRANZILLA_CONFIG.apiUrl,
+      params,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    );
+    
+    // Parse response
+    const responseParams = new URLSearchParams(response.data);
+    const responseCode = responseParams.get('Response');
+    const confirmationCode = responseParams.get('ConfirmationCode');
+    const index = responseParams.get('index');
+    
+    if (responseCode === '000') {
+      res.json({ 
+        success: true, 
+        transactionId: confirmationCode,
+        index: index,
+        message: 'התשלום בוצע בהצלחה'
+      });
+    } else {
+      // Tranzilla response codes
+      const errorMessages = {
+        '001': 'כרטיס חסום',
+        '002': 'כרטיס גנוב',
+        '003': 'צור קשר עם חברת האשראי',
+        '004': 'סירוב',
+        '005': 'סכום לא מאושר',
+        '006': 'שגיאת CVV',
+        '033': 'כרטיס לא תקף',
+        '036': 'כרטיס פג תוקף',
+        '037': 'שגיאה בחיוב',
+        '039': 'מספר כרטיס שגוי',
+        '057': 'ת.ז. לא תקינה',
+        '061': 'חריגה ממסגרת אשראי',
+        '062': 'חריגה ממסגרת יומית',
+        '063': 'חריגה ממסגרת חודשית',
+        '065': 'חריגה ממספר עסקאות יומי',
+        '066': 'חריגה ממספר עסקאות חודשי'
+      };
+      
+      res.json({ 
+        success: false, 
+        error: errorMessages[responseCode] || `Transaction failed: ${responseCode}`,
+        code: responseCode
+      });
+    }
+  } catch (error) {
+    console.error('Tranzilla error:', error.response?.data || error.message);
+    res.status(500).json({ 
+      success: false,
+      error: 'שגיאה בעיבוד התשלום' 
+    });
+  }
+});
+
+// Create Tranzilla Token (for recurring payments)
+app.post('/api/tranzilla/create-token', async (req, res) => {
+  try {
+    const { creditCard, cvv, expMonth, expYear, holderId } = req.body;
+    
+    const params = new URLSearchParams({
+      terminal: TRANZILLA_CONFIG.terminal,
+      TranzilaPW: TRANZILLA_CONFIG.password,
+      ccno: creditCard,
+      cvv: cvv,
+      expmonth: expMonth.padStart(2, '0'),
+      expyear: expYear,
+      holderId: holderId,
+      TranzilaTK: '1', // Request token
+      sum: '1' // Minimal amount for validation
+    });
+    
+    const response = await axios.post(
+      TRANZILLA_CONFIG.tokenUrl,
+      params,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    );
+    
+    const responseParams = new URLSearchParams(response.data);
+    const token = responseParams.get('TranzilaTK');
+    
+    if (token) {
+      res.json({ 
+        success: true, 
+        token: token,
+        message: 'Token created successfully'
+      });
+    } else {
+      res.json({ 
+        success: false, 
+        error: 'Failed to create token' 
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Tranzilla Webhook Handler
+app.post('/api/tranzilla/webhook', (req, res) => {
+  console.log('Tranzilla webhook received:', req.body);
+  // Process webhook data
+  res.status(200).send('OK');
+});
+
+// ===================== GENERAL ROUTES =====================
+
+// Success page
+app.get('/success', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html dir="rtl">
+    <head>
+      <meta charset="UTF-8">
+      <title>התשלום בוצע בהצלחה</title>
+      <style>
+        body { 
+          font-family: Arial, sans-serif; 
+          display: flex; 
+          justify-content: center; 
+          align-items: center; 
+          height: 100vh; 
+          margin: 0;
+          background: #f5f5f5;
+        }
+        .message { 
+          background: white;
+          padding: 40px;
+          border-radius: 10px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          text-align: center;
+        }
+        h1 { color: #4CAF50; }
+        a { 
+          display: inline-block;
+          margin-top: 20px;
+          padding: 10px 20px;
+          background: #4CAF50;
+          color: white;
+          text-decoration: none;
+          border-radius: 5px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="message">
+        <h1>✓ התשלום בוצע בהצלחה!</h1>
+        <p>תודה על ביצוע התשלום</p>
+        <a href="/">חזרה לדף הראשי</a>
+      </div>
+    </body>
+    </html>
+  `);
+});
+
+// Cancel page
+app.get('/cancel', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html dir="rtl">
+    <head>
+      <meta charset="UTF-8">
+      <title>התשלום בוטל</title>
+      <style>
+        body { 
+          font-family: Arial, sans-serif; 
+          display: flex; 
+          justify-content: center; 
+          align-items: center; 
+          height: 100vh; 
+          margin: 0;
+          background: #f5f5f5;
+        }
+        .message { 
+          background: white;
+          padding: 40px;
+          border-radius: 10px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          text-align: center;
+        }
+        h1 { color: #f44336; }
+        a { 
+          display: inline-block;
+          margin-top: 20px;
+          padding: 10px 20px;
+          background: #2196F3;
+          color: white;
+          text-decoration: none;
+          border-radius: 5px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="message">
+        <h1>✗ התשלום בוטל</h1>
+        <p>התשלום לא הושלם</p>
+        <a href="/">נסה שוב</a>
+      </div>
+    </body>
+    </html>
+  `);
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    services: {
+      bit: !!BIT_CONFIG.apiKey,
+      icount: !!ICOUNT_CONFIG.apiUser,
+      tranzilla: !!TRANZILLA_CONFIG.terminal
+    }
+  });
+});
+
+// Serve the main HTML file
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Start server
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Visit: https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`);
+});
+
+// Error handling
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+});

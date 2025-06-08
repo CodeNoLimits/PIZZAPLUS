@@ -1,7 +1,16 @@
 import { Router, Request, Response } from 'express';
 import crypto from 'crypto';
+import axios from 'axios';
 
 const router = Router();
+
+// Configuration iCount basée sur les exemples fournis
+const ICOUNT_CONFIG = {
+  companyId: process.env.ICOUNT_COMPANY_ID,
+  apiUser: process.env.ICOUNT_API_USER,
+  apiPass: process.env.ICOUNT_API_PASS,
+  apiUrl: 'https://api.icount.co.il/api/v3.php'
+};
 
 interface IcountPaymentRequest {
   amount: number;

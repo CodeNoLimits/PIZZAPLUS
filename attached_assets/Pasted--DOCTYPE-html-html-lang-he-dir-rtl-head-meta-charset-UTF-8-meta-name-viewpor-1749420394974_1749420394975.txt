@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Integration Demo - Bit, iCount, Tranzilla</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .payment-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .payment-card h2 {
+            color: #444;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+        }
+        
+        .bit-logo { background: #00d4ff; }
+        .icount-logo { background: #4CAF50; }
+        .tranzilla-logo { background: #ff6b6b; }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .bit-btn {
+            background: #00d4ff;
+            color: white;
+        }
+        
+        .bit-btn:hover {
+            background: #00b8e6;
+        }
+        
+        .icount-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .icount-btn:hover {
+            background: #45a049;
+        }
+        
+        .tranzilla-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .tranzilla-btn:hover {
+            background: #ff5252;
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .loading {
+            background: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+        
+        .setup-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .setup-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .setup-section h3 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            overflow-x: auto;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .code-block code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .instruction-list li {
+            margin-bottom: 10px;
+            padding-right: 20px;
+            position: relative;
+        }
+        
+        .instruction-list li:before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>שילוב מעבדי תשלום - Bit, iCount, Tranzilla</h1>
+        
+        <!-- Setup Instructions -->
+        <div class="setup-section">
+            <h2>הוראות התקנה ב-Replit</h2>
+            
+            <h3>1. Bit Payment Processor</h3>
+            <div class="code-block">
+                <code>
+// server.js - Bit Integration<br>
+const express = require('express');<br>
+const axios = require('axios');<br>
+const crypto = require('crypto');<br>
+<br>
+const app = express();<br>
+app.use(express.json());<br>
+<br>
+// Bit Configuration<br>
+const BIT_CONFIG = {<br>
+&nbsp;&nbsp;merchantId: process.env.BIT_MERCHANT_ID,<br>
+&nbsp;&nbsp;apiKey: process.env.BIT_API_KEY,<br>
+&nbsp;&nbsp;apiSecret: process.env.BIT_API_SECRET,<br>
+&nbsp;&nbsp;apiUrl: 'https://api.bit-pay.co.il/v1'<br>
+};<br>
+<br>
+// Create Bit Payment<br>
+app.post('/api/bit/create-payment', async (req, res) => {<br>
+&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const { amount, description, customerEmail } = req.body;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const payload = {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount: amount,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currency: 'ILS',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;description: description,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;email: customerEmail,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;successUrl: 'https://your-replit-url.repl.co/success',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cancelUrl: 'https://your-replit-url.repl.co/cancel'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;};<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const signature = crypto<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.createHmac('sha256', BIT_CONFIG.apiSecret)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.update(JSON.stringify(payload))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.digest('hex');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const response = await axios.post(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`${BIT_CONFIG.apiUrl}/payments`,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;payload,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;headers: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'X-API-Key': BIT_CONFIG.apiKey,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'X-Signature': signature,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'Content-Type': 'application/json'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;res.json({ paymentUrl: response.data.paymentUrl });<br>
+&nbsp;&nbsp;} catch (error) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;res.status(500).json({ error: error.message });<br>
+&nbsp;&nbsp;}<br>
+});<br>
+                </code>
+            </div>
+            
+            <h3>2. iCount Integration</h3>
+            <div class="code-block">
+                <code>
+// iCount Integration<br>
+const ICOUNT_CONFIG = {<br>
+&nbsp;&nbsp;companyId: process.env.ICOUNT_COMPANY_ID,<br>
+&nbsp;&nbsp;apiUser: process.env.ICOUNT_API_USER,<br>
+&nbsp;&nbsp;apiPass: process.env.ICOUNT_API_PASS,<br>
+&nbsp;&nbsp;apiUrl: 'https://api.icount.co.il/api/v3.php'<br>
+};<br>
+<br>
+// Create iCount Invoice<br>
+app.post('/api/icount/create-invoice', async (req, res) => {<br>
+&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const { clientName, amount, items } = req.body;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const params = new URLSearchParams({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cid: ICOUNT_CONFIG.companyId,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user: ICOUNT_CONFIG.apiUser,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass: ICOUNT_CONFIG.apiPass,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r: 'invoice/create',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client_name: clientName,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum: amount,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;items: JSON.stringify(items)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const response = await axios.post(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ICOUNT_CONFIG.apiUrl,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;params<br>
+&nbsp;&nbsp;&nbsp;&nbsp;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;res.json({ invoiceId: response.data.docnum });<br>
+&nbsp;&nbsp;} catch (error) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;res.status(500).json({ error: error.message });<br>
+&nbsp;&nbsp;}<br>
+});<br>
+                </code>
+            </div>
+            
+            <h3>3. Tranzilla Integration</h3>
+            <div class="code-block">
+                <code>
+// Tranzilla Integration<br>
+const TRANZILLA_CONFIG = {<br>
+&nbsp;&nbsp;terminal: process.env.TRANZILLA_TERMINAL,<br>
+&nbsp;&nbsp;apiUrl: 'https://secure5.tranzila.com/cgi-bin/tranzila71u.cgi'<br>
+};<br>
+<br>
+// Process Tranzilla Payment<br>
+app.post('/api/tranzilla/process-payment', async (req, res) => {<br>
+&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const { creditCard, cvv, expMonth, expYear, amount, holderId } = req.body;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const params = new URLSearchParams({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;terminal: TRANZILLA_CONFIG.terminal,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ccno: creditCard,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cvv: cvv,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;expmonth: expMonth,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;expyear: expYear,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum: amount,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currency: '1', // ILS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;holderId: holderId,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TranzilaPW: process.env.TRANZILLA_PASSWORD<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const response = await axios.post(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRANZILLA_CONFIG.apiUrl,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;params<br>
+&nbsp;&nbsp;&nbsp;&nbsp;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const responseParams = new URLSearchParams(response.data);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const responseCode = responseParams.get('Response');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (responseCode === '000') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res.json({ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;success: true, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transactionId: responseParams.get('ConfirmationCode') <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res.json({ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;success: false, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error: `Transaction failed: ${responseCode}` <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;} catch (error) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;res.status(500).json({ error: error.message });<br>
+&nbsp;&nbsp;}<br>
+});<br>
+<br>
+app.listen(3000, () => {<br>
+&nbsp;&nbsp;console.log('Server running on port 3000');<br>
+});<br>
+                </code>
+            </div>
+            
+            <h3>הגדרת משתני סביבה ב-Replit</h3>
+            <ul class="instruction-list">
+                <li>לחץ על "Secrets" בתפריט הצדדי של Replit</li>
+                <li>הוסף את המפתחות הבאים:
+                    <div class="code-block">
+                        <code>
+BIT_MERCHANT_ID=your_bit_merchant_id<br>
+BIT_API_KEY=your_bit_api_key<br>
+BIT_API_SECRET=your_bit_api_secret<br>
+ICOUNT_COMPANY_ID=your_icount_company_id<br>
+ICOUNT_API_USER=your_icount_username<br>
+ICOUNT_API_PASS=your_icount_password<br>
+TRANZILLA_TERMINAL=your_terminal_name<br>
+TRANZILLA_PASSWORD=your_tranzilla_password
+                        </code>
+                    </div>
+                </li>
+                <li>התקן את החבילות הנדרשות ב-package.json:
+                    <div class="code-block">
+                        <code>
+{<br>
+&nbsp;&nbsp;"name": "payment-integration",<br>
+&nbsp;&nbsp;"version": "1.0.0",<br>
+&nbsp;&nbsp;"dependencies": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"express": "^4.18.2",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"axios": "^1.6.0",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"crypto": "^1.0.1",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"cors": "^2.8.5"<br>
+&nbsp;&nbsp;}<br>
+}
+                        </code>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Payment Forms Demo -->
+        <div class="payment-grid">
+            <!-- Bit Payment -->
+            <div class="payment-card">
+                <h2>
+                    <div class="logo bit-logo"></div>
+                    Bit Payment
+                </h2>
+                <form id="bitForm">
+                    <div class="form-group">
+                        <label>סכום (₪)</label>
+                        <input type="number" name="amount" required min="1" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label>תיאור</label>
+                        <input type="text" name="description" required value="תשלום דמו">
+                    </div>
+                    <div class="form-group">
+                        <label>אימייל</label>
+                        <input type="email" name="email" required value="customer@example.com">
+                    </div>
+                    <button type="submit" class="bit-btn">שלם עם Bit</button>
+                    <div class="status" id="bitStatus"></div>
+                </form>
+            </div>
+            
+            <!-- iCount Invoice -->
+            <div class="payment-card">
+                <h2>
+                    <div class="logo icount-logo"></div>
+                    iCount Invoice
+                </h2>
+                <form id="icountForm">
+                    <div class="form-group">
+                        <label>שם לקוח</label>
+                        <input type="text" name="clientName" required value="לקוח דמו">
+                    </div>
+                    <div class="form-group">
+                        <label>סכום (₪)</label>
+                        <input type="number" name="amount" required min="1" value="500">
+                    </div>
+                    <div class="form-group">
+                        <label>תיאור פריט</label>
+                        <input type="text" name="itemDescription" required value="שירות ייעוץ">
+                    </div>
+                    <button type="submit" class="icount-btn">צור חשבונית</button>
+                    <div class="status" id="icountStatus"></div>
+                </form>
+            </div>
+            
+            <!-- Tranzilla Payment -->
+            <div class="payment-card">
+                <h2>
+                    <div class="logo tranzilla-logo"></div>
+                    Tranzilla Payment
+                </h2>
+                <form id="tranzillaForm">
+                    <div class="form-group">
+                        <label>מספר כרטיס (דמו: 4580000000000000)</label>
+                        <input type="text" name="creditCard" required value="4580000000000000" maxlength="16">
+                    </div>
+                    <div class="form-group">
+                        <label>CVV</label>
+                        <input type="text" name="cvv" required value="123" maxlength="3">
+                    </div>
+                    <div class="form-group">
+                        <label>תוקף (חודש/שנה)</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" name="expMonth" required value="12" maxlength="2" placeholder="MM">
+                            <input type="text" name="expYear" required value="25" maxlength="2" placeholder="YY">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>ת.ז.</label>
+                        <input type="text" name="holderId" required value="123456789" maxlength="9">
+                    </div>
+                    <div class="form-group">
+                        <label>סכום (₪)</label>
+                        <input type="number" name="amount" required min="1" value="250">
+                    </div>
+                    <button type="submit" class="tranzilla-btn">בצע תשלום</button>
+                    <div class="status" id="tranzillaStatus"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Bit Payment Handler
+        document.getElementById('bitForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('bitStatus');
+            status.className = 'status loading';
+            status.style.display = 'block';
+            status.textContent = 'מעבד תשלום...';
+            
+            const formData = new FormData(e.target);
+            const data = {
+                amount: formData.get('amount'),
+                description: formData.get('description'),
+                customerEmail: formData.get('email')
+            };
+            
+            try {
+                const response = await fetch('/api/bit/create-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.paymentUrl) {
+                    status.className = 'status success';
+                    status.innerHTML = `התשלום נוצר בהצלחה! <a href="${result.paymentUrl}" target="_blank">לחץ כאן לתשלום</a>`;
+                } else {
+                    throw new Error('Failed to create payment');
+                }
+            } catch (error) {
+                status.className = 'status error';
+                status.textContent = 'שגיאה ביצירת התשלום: ' + error.message;
+            }
+        });
+        
+        // iCount Invoice Handler
+        document.getElementById('icountForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('icountStatus');
+            status.className = 'status loading';
+            status.style.display = 'block';
+            status.textContent = 'יוצר חשבונית...';
+            
+            const formData = new FormData(e.target);
+            const data = {
+                clientName: formData.get('clientName'),
+                amount: formData.get('amount'),
+                items: [{
+                    description: formData.get('itemDescription'),
+                    quantity: 1,
+                    price: formData.get('amount')
+                }]
+            };
+            
+            try {
+                const response = await fetch('/api/icount/create-invoice', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.invoiceId) {
+                    status.className = 'status success';
+                    status.textContent = `חשבונית נוצרה בהצלחה! מספר חשבונית: ${result.invoiceId}`;
+                } else {
+                    throw new Error('Failed to create invoice');
+                }
+            } catch (error) {
+                status.className = 'status error';
+                status.textContent = 'שגיאה ביצירת החשבונית: ' + error.message;
+            }
+        });
+        
+        // Tranzilla Payment Handler
+        document.getElementById('tranzillaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('tranzillaStatus');
+            status.className = 'status loading';
+            status.style.display = 'block';
+            status.textContent = 'מעבד תשלום...';
+            
+            const formData = new FormData(e.target);
+            const data = {
+                creditCard: formData.get('creditCard'),
+                cvv: formData.get('cvv'),
+                expMonth: formData.get('expMonth'),
+                expYear: formData.get('expYear'),
+                amount: formData.get('amount'),
+                holderId: formData.get('holderId')
+            };
+            
+            try {
+                const response = await fetch('/api/tranzilla/process-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    status.className = 'status success';
+                    status.textContent = `התשלום בוצע בהצלחה! מספר אישור: ${result.transactionId}`;
+                } else {
+                    status.className = 'status error';
+                    status.textContent = result.error || 'התשלום נכשל';
+                }
+            } catch (error) {
+                status.className = 'status error';
+                status.textContent = 'שגיאה בביצוע התשלום: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+// Complete Payment Processor Error Codes Reference
+
+// ===================== TRANZILLA ERROR CODES =====================
+const TRANZILLA_ERROR_CODES = {
+  '000': 'עסקה תקינה',
+  '001': 'כרטיס חסום',
+  '002': 'כרטיס גנוב', 
+  '003': 'צור קשר עם חברת האשראי',
+  '004': 'סירוב',
+  '005': 'סכום לא מאושר',
+  '006': 'שגיאת CVV',
+  '007': 'צור קשר עם חברת האשראי',
+  '008': 'תקלה בבניית מפתח גישה לקובץ חסומים',
+  '009': 'תקשורת נכשלה',
+  '010': 'הופסק ע"י המשתמש',
+  '011': 'לא הוזן סכום עסקה',
+  '012': 'סוג עסקה שגוי',
+  '013': 'סכום עסקה שגוי',
+  '014': 'מספר כרטיס לא תקין',
+  '015': 'מספר סניף שגוי',
+  '016': 'חובה להזין קוד אישור',
+  '017': 'הוזנו ספרות אחרי הנקודה בסכום לחיוב',
+  '019': 'שגיאה בביצוע העסקה',
+  '020': 'CSV לא תקין',
+  '021': 'כרטיס לא רשאי לבצע עסקת מועדון',
+  '022': 'מספר תשלומים שגוי',
+  '023': 'לא ניתן לבצע עסקת מועדון עם אמצעי תשלום זה',
+  '024': 'כרטיס לא תקף',
+  '025': 'לא הוזן מספר תעודת זהות',
+  '026': 'לא הוזן CVV2',
+  '027': 'לא הוזן password',
+  '028': 'חברת האשראי לא הוגדרה כראוי',
+  '029': 'מספר תרמינל שגוי',
+  '030': 'סליקה ראשונית בלבד',
+  '031': 'ניתן לבטל עסקה שמקורה במסוף בלבד',
+  '032': 'לא ניתן לבצע עסקת אשראי בתשלומים בכרטיס חיוב מיידי (דביט)',
+  '033': 'כרטיס לא תקף',
+  '034': 'כרטיס לא רשאי לבצע עסקאות דולריות',
+  '035': 'תעודת זהות לא תקינה',
+  '036': 'כרטיס פג תוקף',
+  '037': 'שגיאה בחיוב - העסקה נדחתה',
+  '038': 'לא ניתן לבצע עסקה – עבר הזמן המוקצב',
+  '039': 'מספר כרטיס שגוי',
+  '040': 'תוקף שגוי',
+  '041': 'כרטיס ביטול בלבד',
+  '042': 'כרטיס לביצוע עסקת חובה בלבד',
+  '043': 'אמצעי התשלום חסום לשימוש אינטרנט',
+  '044': 'אין אישור למסוף לעבודה באשראי',
+  '045': 'עסקה לא קיימת',
+  '046': 'לא ניתן לבטל עסקה שבוצעה ביותר ממלוא הסכום',
+  '047': 'חובה לקלוט סכום ראשון',
+  '051': 'אין מספיק אשראי',
+  '052': 'מספר רכב לא תקין',
+  '053': 'חובה להקליד סכום ראשון',
+  '057': 'ת.ז. לא תקינה',
+  '058': 'לא ניתן לבצע עסקה בכרטיס דמו',
+  '059': 'אין הרשאה לעסקה כפולה',
+  '060': 'שגיאה בבניית המפתח',
+  '061': 'חריגה ממסגרת אשראי',
+  '062': 'חריגה ממסגרת יומית',
+  '063': 'חריגה ממסגרת חודשית',
+  '064': 'חריגה ממסגרת לעסקה בודדת',
+  '065': 'חריגה ממספר עסקאות יומי',
+  '066': 'חריגה ממספר עסקאות חודשי',
+  '067': 'כרטיס אמריקן לא אושר לעבודה',
+  '069': 'משתמש לא קיים',
+  '070': 'משתמש לא מחובר',
+  '071': 'משתמש נעול',
+  '072': 'לא ניתן לבטל עסקה שלא בוצעה באותו היום',
+  '073': 'עסקה לא נמצאה',
+  '074': 'עסקה כבר בוטלה/לא ניתן לבטל עסקת ביטול',
+  '075': 'עסקה כבר שודרה - לא ניתן לבטל',
+  '076': 'עסקה זו כבר אושרה ולא ניתן לבטלה',
+  '077': 'חסר Token',
+  '078': 'אין הרשאה לכרטיס חיוב מיידי',
+  '079': 'עסקה נדחתה עקב חשד להונאה',
+  '080': 'קוד CVV2 שגוי',
+  '081': 'ניסיון לחיוב בכרטיס חסום',
+  '082': 'מספר כרטיס אשראי לא תקין',
+  '083': 'לא ניתן לחייב בכרטיס דיינרס',
+  '084': 'מספר CVV2 שגוי',
+  '085': 'עסקה נכשלה - לא ניתן לאמת את בעל הכרטיס',
+  '086': 'מגבלה על סוג העסקה וערוץ העסקה',
+  '087': 'לא ניתן לבצע עסקת ביטול על עסקה זו',
+  '088': 'העסקה עברה זמן מוגבל לביטולה',
+  '089': 'טווח תאריכים לא חוקי',
+  '090': 'לא נמצאו עסקאות',
+  '091': 'יש יותר מ-300 עסקאות',
+  '092': 'עסקה שבוצעה ללא CVV לא ניתנת לביטול',
+  '093': 'חובה להזין מספר עסקה או מספר אסמכתא',
+  '094': 'העסקה בוטלה בעבר',
+  '095': 'שגיאת תקשורת',
+  '096': 'קובץ עסקאות ריק',
+  '099': 'תקלה כללית',
+  '100': 'סירוב ללא סיבה',
+  '101': 'אין מלאי מספיק',
+  '102': 'כרטיס לא נתמך',
+  '103': 'העסקה נדחתה',
+  '104': 'הטרמינל אינו מאושר',
+  '105': 'IP לא מורשה',
+  '106': 'עסקה לא מורשת למשתמש',
+  '107': 'סכום עסקה נמוך מידי',
+  '108': 'הטרמינל נחסם',
+  '200': 'לא ניתן לבצע עסקת זיכוי - חייבים להזין מספר כרטיס'
+};
+
+// ===================== BIT PAYMENT ERROR CODES =====================
+const BIT_ERROR_CODES = {
+  'INVALID_CREDENTIALS': 'פרטי הזדהות שגויים',
+  'INSUFFICIENT_FUNDS': 'אין מספיק כסף בחשבון',
+  'PAYMENT_EXPIRED': 'התשלום פג תוקף',
+  'PAYMENT_CANCELLED': 'התשלום בוטל',
+  'DUPLICATE_PAYMENT': 'תשלום כפול',
+  'INVALID_AMOUNT': 'סכום לא תקין',
+  'MERCHANT_NOT_ACTIVE': 'חשבון סוחר לא פעיל',
+  'INVALID_CURRENCY': 'מטבע לא נתמך',
+  'TECHNICAL_ERROR': 'תקלה טכנית',
+  'FRAUD_SUSPECTED': 'חשד להונאה',
+  'MAX_ATTEMPTS_EXCEEDED': 'חריגה ממספר ניסיונות מותר'
+};
+
+// ===================== ICOUNT ERROR CODES =====================
+const ICOUNT_ERROR_CODES = {
+  '1': 'שגיאה כללית',
+  '2': 'פרטי הזדהות שגויים',
+  '3': 'חסרים פרמטרים חובה',
+  '4': 'לקוח לא קיים',
+  '5': 'מסמך לא נמצא',
+  '6': 'אין הרשאה לפעולה זו',
+  '7': 'חריגה ממכסת API',
+  '8': 'פורמט תאריך שגוי',
+  '9': 'סכום לא תקין',
+  '10': 'מטבע לא נתמך',
+  '11': 'כפילות במספר חשבונית',
+  '12': 'החשבון נעול',
+  '13': 'תקופה חשבונאית סגורה',
+  '14': 'פריט לא קיים',
+  '15': 'מע"מ לא תקין'
+};
+
+// ===================== HELPER FUNCTIONS =====================
+
+// Get error message for Tranzilla
+function getTranzillaErrorMessage(code) {
+  return TRANZILLA_ERROR_CODES[code] || `שגיאה לא ידועה (קוד: ${code})`;
+}
+
+// Get error message for Bit
+function getBitErrorMessage(errorCode) {
+  return BIT_ERROR_CODES[errorCode] || `שגיאה: ${errorCode}`;
+}
+
+// Get error message for iCount
+function getIcountErrorMessage(code) {
+  return ICOUNT_ERROR_CODES[code] || `שגיאה בחשבונית (קוד: ${code})`;
+}
+
+// ===================== USAGE EXAMPLE =====================
+
+// Example: Handling Tranzilla response
+app.post('/api/tranzilla/process-payment', async (req, res) => {
+  try {
+    // ... payment processing code ...
+    
+    const responseCode = responseParams.get('Response');
+    
+    if (responseCode === '000') {
+      // Success
+      res.json({ 
+        success: true, 
+        transactionId: confirmationCode,
+        message: 'התשלום בוצע בהצלחה'
+      });
+    } else {
+      // Error - use the error message mapping
+      res.json({ 
+        success: false, 
+        error: getTranzillaErrorMessage(responseCode),
+        code: responseCode,
+        technicalMessage: TRANZILLA_ERROR_CODES[responseCode]
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ 
+      success: false,
+      error: 'שגיאה בעיבוד התשלום',
+      details: error.message
+    });
+  }
+});
+
+// Example: Handling Bit errors
+app.post('/api/bit/create-payment', async (req, res) => {
+  try {
+    // ... payment creation code ...
+  } catch (error) {
+    if (error.response?.data?.errorCode) {
+      res.status(400).json({
+        success: false,
+        error: getBitErrorMessage(error.response.data.errorCode),
+        errorCode: error.response.data.errorCode
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        error: 'שגיאה ביצירת התשלום'
+      });
+    }
+  }
+});
+
+// Example: Handling iCount errors
+app.post('/api/icount/create-invoice', async (req, res) => {
+  try {
+    // ... invoice creation code ...
+    
+    if (!response.data.status) {
+      const errorCode = response.data.errorCode || '1';
+      throw new Error(getIcountErrorMessage(errorCode));
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// ===================== VALIDATION ERROR MESSAGES =====================
+const VALIDATION_ERRORS = {
+  MISSING_FIELD: 'חסר שדה חובה',
+  INVALID_EMAIL: 'כתובת אימייל לא תקינה',
+  INVALID_PHONE: 'מספר טלפון לא תקין',
+  INVALID_ID: 'תעודת זהות לא תקינה',
+  INVALID_CARD_NUMBER: 'מספר כרטיס אשראי לא תקין',
+  INVALID_CVV: 'קוד CVV לא תקין',
+  INVALID_EXPIRY: 'תאריך תוקף לא תקין',
+  AMOUNT_TOO_LOW: 'הסכום נמוך מדי',
+  AMOUNT_TOO_HIGH: 'הסכום גבוה מדי',
+  INVALID_CURRENCY: 'מטבע לא נתמך',
+  TERMS_NOT_ACCEPTED: 'יש לאשר את התנאים'
+};
+
+// Credit card validation function
+function validateCreditCard(number) {
+  // Remove spaces and hyphens
+  const cleaned = number.replace(/[\s-]/g, '');
+  
+  // Check if it's a number and has valid length
+  if (!/^\d+$/.test(cleaned) || cleaned.length < 13 || cleaned.length > 19) {
+    return false;
+  }
+  
+  // Luhn algorithm
+  let sum = 0;
+  let isEven = false;
+  
+  for (let i = cleaned.length - 1; i >= 0; i--) {
+    let digit = parseInt(cleaned[i]);
+    
+    if (isEven) {
+      digit *= 2;
+      if (digit > 9) {
+        digit -= 9;
+      }
+    }
+    
+    sum += digit;
+    isEven = !isEven;
+  }
+  
+  return sum % 10 === 0;
+}
+
+// Israeli ID validation function
+function validateIsraeliID(id) {
+  // Clean and pad the ID
+  id = String(id).trim();
+  if (!/^\d{9}$/.test(id)) {
+    // Try padding with zeros
+    id = id.padStart(9, '0');
+    if (!/^\d{9}$/.test(id)) {
+      return false;
+    }
+  }
+  
+  // Calculate check digit
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    let digit = parseInt(id[i]);
+    digit *= (i % 2) + 1;
+    if (digit > 9) {
+      digit = Math.floor(digit / 10) + (digit % 10);
+    }
+    sum += digit;
+  }
+  
+  return sum % 10 === 0;
+}
+
+// Export for use in other files
+module.exports = {
+  TRANZILLA_ERROR_CODES,
+  BIT_ERROR_CODES,
+  ICOUNT_ERROR_CODES,
+  VALIDATION_ERRORS,
+  getTranzillaErrorMessage,
+  getBitErrorMessage,
+  getIcountErrorMessage,
+  validateCreditCard,
+  validateIsraeliID
+};
