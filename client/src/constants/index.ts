@@ -259,6 +259,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionRu: 'Средняя пицца с томатным соусом и моцареллой - диаметр 36см',
     price: 5200, // ₪52
     category: 'pizzas',
+    image: '@assets/image_1749422361511.png',
     available: true,
     toppings: ['tomatoes', 'onions', 'olives-green', 'olives-black', 'mushrooms', 'hot-pepper', 'bulgarian', 'eggplant', 'sweet-potato', 'corn', 'pineapple', 'tuna', 'pesto'],
     toppingPrice: 700, // ₪7 per topping for whole pizza
