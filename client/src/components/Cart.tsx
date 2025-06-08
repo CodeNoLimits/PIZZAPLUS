@@ -13,6 +13,7 @@ interface CartProps {
   onClose: () => void;
   onUpdateQuantity: (cartItemId: string, quantity: number) => void;
   onRemoveItem: (cartItemId: string) => void;
+  onCheckout?: () => void;
 }
 
 const Cart: React.FC<CartProps> = ({
@@ -23,6 +24,7 @@ const Cart: React.FC<CartProps> = ({
   onClose,
   onUpdateQuantity,
   onRemoveItem,
+  onCheckout,
 }) => {
   const formatPrice = (price: number) => `${translations.currency}${(price / 100).toFixed(0)}`;
 

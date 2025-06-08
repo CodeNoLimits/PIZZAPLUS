@@ -4,14 +4,19 @@ export interface MenuItem {
   id: string;
   nameHe: string;
   nameEn: string;
+  nameFr?: string;
+  nameRu?: string;
   descriptionHe?: string;
   descriptionEn?: string;
+  descriptionFr?: string;
+  descriptionRu?: string;
   price: number; // in agorot
   category: string;
   image?: string;
   available: boolean;
   toppings?: string[];
   toppingPrice?: number;
+  halfToppingPrice?: number; // for half-pizza toppings
 }
 
 export interface CartItem extends MenuItem {

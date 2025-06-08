@@ -9,12 +9,14 @@ import About from './components/About';
 import Contact from './components/Contact';
 import Cart from './components/Cart';
 import ChatWidget from './components/ChatWidget';
+import BitPayment from './components/BitPayment';
 import { MessageCircle, Phone } from 'lucide-react';
 
 function App() {
   const [currentLanguage, setCurrentLanguage] = useState<Language>('he');
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
   const translations = TRANSLATIONS[currentLanguage];
 
@@ -178,6 +180,19 @@ function App() {
         onClose={() => setIsCartOpen(false)}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
+        onCheckout={() => {
+          setIsCartOpen(false);
+          setIsPaymentOpen(true);
+        }}
+      />
+
+      <BitPayment
+        isOpen={isPaymentOpen}
+        onClose={() => setIsPaymentOpen(false)}
+        cartItems={cartItems}
+        total={cartItems.reduce((sum, item) => sum + (item.totalPrice * item.quantity), 0)}
+        translations={translations}
+        currentLanguage={currentLanguage}
       />
 
       <ChatWidget

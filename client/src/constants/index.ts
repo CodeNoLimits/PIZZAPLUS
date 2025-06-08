@@ -232,6 +232,18 @@ export const TRANSLATIONS: Record<string, Translations> = {
 export const MENU_ITEMS: MenuItem[] = [
   // Pizzas
   {
+    id: 'pizza-xl',
+    nameHe: 'מגש XL',
+    nameEn: 'Pizza XL',
+    descriptionHe: 'פיצה גדולה עם רוטב עגבניות ומוצרלה - קוטר 42',
+    descriptionEn: 'Large pizza with tomato sauce and mozzarella - 42cm diameter',
+    price: 6500, // ₪65
+    category: 'pizzas',
+    available: true,
+    toppings: ['tomatoes', 'onions', 'olives-green', 'olives-black', 'mushrooms', 'hot-pepper', 'bulgarian', 'eggplant', 'sweet-potato', 'corn', 'pineapple', 'tuna', 'pesto'],
+    toppingPrice: 850, // ₪8.5 per topping (20% more than L)
+  },
+  {
     id: 'pizza-l',
     nameHe: 'מגש L',
     nameEn: 'Pizza L',
@@ -242,6 +254,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     toppings: ['tomatoes', 'onions', 'olives-green', 'olives-black', 'mushrooms', 'hot-pepper', 'bulgarian', 'eggplant', 'sweet-potato', 'corn', 'pineapple', 'tuna', 'pesto'],
     toppingPrice: 700, // ₪7 per topping for whole pizza
+    halfToppingPrice: 600, // ₪6 per topping for half pizza (20% more than CSV ₪5)
   },
   {
     id: 'pizza-personal',
@@ -253,7 +266,7 @@ export const MENU_ITEMS: MenuItem[] = [
     category: 'pizzas',
     available: true,
     toppings: ['tomatoes', 'onions', 'olives-green', 'olives-black', 'mushrooms', 'hot-pepper', 'bulgarian', 'eggplant', 'sweet-potato', 'corn', 'pineapple', 'tuna', 'pesto'],
-    toppingPrice: 500, // ₪5 per topping for personal pizza
+    toppingPrice: 600, // ₪6 per topping (20% more than CSV ₪5)
   },
   
   // Pastas
