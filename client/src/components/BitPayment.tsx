@@ -152,12 +152,83 @@ const BitPayment: React.FC<BitPaymentProps> = ({
     }
   };
 
-  const handleCardPayment = () => {
-    // Credit card payment integration
-    alert(currentLanguage === 'he' 
-      ? 'תשלום בכרטיס אשראי יתווסף בקרוב'
-      : 'Credit card payment coming soon'
-    );
+  const handleCardPayment = async () => {
+    if (!validateForm()) {
+      setIsProcessing(false);
+      return;
+    }
+    
+    setIsProcessing(true);
+    const orderId = generateOrderId();
+    const orderData = {
+      orderId,
+      amount: total,
+      currency: 'ILS',
+      customerName: customerInfo.name,
+      customerPhone: customerInfo.phone,
+      customerEmail: customerInfo.email,
+      description: `Pizza Plus Order #${orderId}`,
+      items: cartItems.map(item => ({
+        name: item.nameHe,
+        quantity: item.quantity,
+        price: item.totalPrice
+      }))
+    };
+
+    try {
+      console.log('Creating Tranzila payment:', orderData);
+      
+      const response = await fetch('/api/tranzila/create-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const result = await response.json();
+      console.log('Tranzila payment response:', result);
+
+      if (result.success && result.paymentUrl) {
+        console.log('Opening Tranzila payment URL:', result.paymentUrl);
+        
+        const paymentWindow = window.open(result.paymentUrl, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+        
+        if (!paymentWindow) {
+          alert(currentLanguage === 'he' 
+            ? 'חוסם חלונות קופצים מונע את התשלום. אנא אפשר חלונות קופצים ונסה שוב'
+            : currentLanguage === 'fr'
+            ? 'Le bloqueur de popups empêche le paiement. Veuillez autoriser les popups et réessayer'
+            : currentLanguage === 'ru'
+            ? 'Блокировщик всплывающих окон препятствует оплате. Пожалуйста, разрешите всплывающие окна и попробуйте еще раз'
+            : 'Popup blocker is preventing payment. Please allow popups and try again'
+          );
+          setIsProcessing(false);
+          return;
+        }
+        
+        // Close the payment dialog
+        onClose();
+        setIsProcessing(false);
+        
+      } else {
+        console.error('Payment failed:', result);
+        throw new Error(result.error || 'Payment creation failed');
+      }
+      
+    } catch (error) {
+      console.error('Tranzila payment error:', error);
+      setIsProcessing(false);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(currentLanguage === 'he' 
+        ? `שגיאה בתשלום: ${errorMessage}. אנא נסה שוב`
+        : currentLanguage === 'fr'
+        ? `Erreur de paiement: ${errorMessage}. Veuillez réessayer`
+        : currentLanguage === 'ru'
+        ? `Ошибка платежа: ${errorMessage}. Пожалуйста, попробуйте еще раз`
+        : `Payment error: ${errorMessage}. Please try again`
+      );
+    }
   };
 
   const handleCashPayment = () => {

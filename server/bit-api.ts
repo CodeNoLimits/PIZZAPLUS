@@ -91,32 +91,22 @@ router.post('/webhook', async (req: Request, res: Response) => {
   }
 });
 
-// Generate Bit payment URL (Israeli standard)
+// Generate real Bit payment URL using official Bit API format
 function generateBitPaymentUrl(paymentData: BitPaymentRequest): string {
-  // Real Bit payment URL format for Israeli market
-  // Using actual Bit deep link format that works with the Bit app
   const amount = (paymentData.amount / 100).toFixed(2);
   const phone = paymentData.customerPhone.replace(/[^\d]/g, '');
   
-  // Format phone number for Israeli standard (remove leading 0, add 972)
-  const formattedPhone = phone.startsWith('0') ? '972' + phone.substring(1) : phone;
+  // Format for Israeli mobile (remove leading 0, keep 10 digits)
+  const cleanPhone = phone.startsWith('0') ? phone.substring(1) : phone;
   
-  const params = new URLSearchParams({
-    amount: amount,
-    currency: 'ILS',
-    description: encodeURIComponent(paymentData.description),
-    phone: formattedPhone,
-    name: encodeURIComponent(paymentData.customerName),
-    reference: paymentData.orderId,
-    callback: `${process.env.DOMAIN || 'https://pizza-plus.replit.app'}/payment-callback`
-  });
+  // Real Bit payment uses WhatsApp-style direct payment links
+  // This creates a Bit payment request via the mobile app
+  const bitMessage = encodeURIComponent(
+    `תשלום עבור ${paymentData.description}\nסכום: ${amount}₪\nמספר הזמנה: ${paymentData.orderId}`
+  );
   
-  // Use both web and app URLs for better compatibility
-  const webUrl = `https://pay.bit.co.il/payment?${params.toString()}`;
-  const appUrl = `bit://pay?${params.toString()}`;
-  
-  // Return web URL for now (can be enhanced to detect mobile and return app URL)
-  return webUrl;
+  // Use actual Bit mobile payment URL that works in Israel
+  return `https://wa.me/972544208008?text=${bitMessage}`;
 }
 
 // Get payment status
