@@ -408,15 +408,7 @@ const BitPayment: React.FC<BitPaymentProps> = ({
                 {currentLanguage === 'he' ? 'תשלום דרך Bit' : 'Pay with Bit'}
               </Button>
 
-              {/* Credit Card */}
-              <Button
-                variant={paymentMethod === 'card' ? 'default' : 'outline'}
-                className="h-12 justify-start"
-                onClick={() => setPaymentMethod('card')}
-              >
-                <CreditCard className="w-5 h-5 mr-3" />
-                {currentLanguage === 'he' ? 'כרטיס אשראי' : 'Credit Card'}
-              </Button>
+
 
               {/* Cash Payment */}
               <Button
@@ -455,8 +447,6 @@ const BitPayment: React.FC<BitPaymentProps> = ({
             disabled={isProcessing}
             onClick={() => {
               if (paymentMethod === 'bit') handleBitPayment();
-              else if (paymentMethod === 'card') handleCardPayment();
-              else if (paymentMethod === 'icount') handleIcountPayment();
               else handleCashPayment();
             }}
           >
