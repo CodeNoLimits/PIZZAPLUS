@@ -2,7 +2,7 @@ import React from 'react';
 import { Translations } from '../types';
 import { Card } from '@/components/ui/card';
 import restaurantExterior from '@assets/1000288415_1749403007374.jpg';
-import restaurantInterior1 from '@assets/1000288419_1749403007381.jpg';
+import pizzaPlusLogo from '@assets/1000181891_1749424433195.jpg';
 import restaurantInterior2 from '@assets/1000288421_1749403007381.jpg';
 import restaurantInterior3 from '@assets/1000288423_1749403007381.jpg';
 import pizzaClose from '@assets/1000185475_1749403007380.jpg';
@@ -19,8 +19,8 @@ const Gallery: React.FC<GalleryProps> = ({ translations }) => {
       alt: 'Pizza Plus Restaurant Exterior'
     },
     {
-      url: restaurantInterior1,
-      alt: 'Modern Restaurant Interior'
+      url: pizzaPlusLogo,
+      alt: 'Pizza Plus Official Logo'
     },
     {
       url: pizzaClose,
