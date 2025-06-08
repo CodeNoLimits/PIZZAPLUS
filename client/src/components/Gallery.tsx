@@ -1,6 +1,12 @@
 import React from 'react';
 import { Translations } from '../types';
 import { Card } from '@/components/ui/card';
+import restaurantExterior from '@assets/1000288415_1749403007374.jpg';
+import restaurantInterior1 from '@assets/1000288419_1749403007381.jpg';
+import restaurantInterior2 from '@assets/1000288421_1749403007381.jpg';
+import restaurantInterior3 from '@assets/1000288423_1749403007381.jpg';
+import pizzaClose from '@assets/1000185475_1749403007380.jpg';
+import kosherCertificate from '@assets/1000182745_1749403007380.jpg';
 
 interface GalleryProps {
   translations: Translations;
@@ -9,28 +15,28 @@ interface GalleryProps {
 const Gallery: React.FC<GalleryProps> = ({ translations }) => {
   const galleryImages = [
     {
-      url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800',
-      alt: 'Restaurant exterior'
+      url: restaurantExterior,
+      alt: 'Pizza Plus Restaurant Exterior'
     },
     {
-      url: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800',
-      alt: 'Pizza making process'
+      url: restaurantInterior1,
+      alt: 'Modern Restaurant Interior'
     },
     {
-      url: 'https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800',
-      alt: 'Fresh ingredients'
+      url: pizzaClose,
+      alt: 'Fresh Pizza Close Up'
     },
     {
-      url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800',
-      alt: 'Modern kitchen'
+      url: restaurantInterior2,
+      alt: 'Professional Kitchen Setup'
     },
     {
-      url: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800',
-      alt: 'Happy customers'
+      url: kosherCertificate,
+      alt: 'Kosher Certification'
     },
     {
-      url: 'https://images.unsplash.com/photo-1587574293340-e0011c4e8ecf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800',
-      alt: 'Restaurant interior'
+      url: restaurantInterior3,
+      alt: 'Comfortable Dining Area'
     }
   ];
 

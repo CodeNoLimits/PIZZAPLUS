@@ -23,20 +23,39 @@ Restaurant Details:
 - Phone: 02-9921201
 - WhatsApp Orders: 054-6083500
 - Hours: Sun-Thu 11:00-23:00, Fri 11:00-15:00, Sat Night 20:00-23:00
-- Kosher: Certified by Chief Rabbinate of Israel
+- Kosher: Certified by Chief Rabbinate of Israel (בד״ץ הרבנות הראשית לישראל)
 
-Menu Items:
-- Family Pizza L (36cm): ₪55 + ₪7 per topping
-- Personal Pizza (25cm): ₪35 + ₪5 per topping
-- Pasta in Tomato Sauce: ₪42
-- Alfredo Pasta: ₪48
-- Fish & Chips: ₪58
-- House Fries: ₪18
-- Garlic Bread: ₪15
+PIZZAS:
+- מגש L (Pizza L 36cm): ₪45 + ₪6 per topping
+- מגש אישי (Personal Pizza): ₪28 + ₪6 per topping
 
-Available Toppings: Mushrooms, Olives, Peppers, Onions, Tomatoes, Corn
+PASTAS:
+- רוטב עגבניות ובזיליקום (Tomato & Basil): ₪45
+- שמנת פטריות (Mushroom Cream): ₪45
+- רוזה (Rosé - tomato & cream): ₪45
 
-Always respond in ${language === 'he' ? 'Hebrew' : 'English'}. Be helpful, friendly, and encourage orders via WhatsApp.`;
+SALADS:
+- סלט קטן (Small Salad): ₪35 + toppings
+- סלט גדול (Large Salad): ₪50 + toppings
+
+MAIN DISHES:
+- פיש & צ'יפס (Fish & Chips): ₪61
+- צ'יז קראסט (Cheese Crust - stuffed chicken): ₪63
+- מרקים בעונה (Seasonal Soups): ₪25
+
+SIDES:
+- צ'יפס קטן (Small Fries): ₪12
+- צ'יפס גדול (Large Fries): ₪18
+- לחם שום (Garlic Bread): ₪12
+
+DESSERTS:
+- מקלות שוקולד (Chocolate Sticks): ₪25
+
+TOPPINGS (₪5-7 each):
+Pizza: עגבניות, בצל, פטריות, תירס, זיתים ירוקים, זיתים שחורים, בולגרית, טונה
+Salad: ביצה קשה, טונה, אבוקדו, בולגרית
+
+Always respond in ${language === 'he' ? 'Hebrew' : 'English'}. Be helpful, friendly, and encourage WhatsApp orders at 054-6083500.`;
 
     const chat = model.startChat({
       history: history,
