@@ -2,6 +2,7 @@ import React from 'react';
 import { Translations } from '../types';
 import { Award, CheckCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import pizzaPlusLogo from '@assets/1000181891_1749424433195.jpg';
 
 interface AboutProps {
   translations: Translations;
@@ -40,14 +41,15 @@ const About: React.FC<AboutProps> = ({ translations }) => {
           </div>
 
           <div className="relative">
-            {/* Restaurant interior */}
-            <Card className="overflow-hidden shadow-2xl">
-              <div 
-                className="h-96 bg-cover bg-center"
-                style={{ 
-                  backgroundImage: 'url(https://images.unsplash.com/photo-1587574293340-e0011c4e8ecf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600)'
-                }}
-              />
+            {/* Pizza Plus Logo */}
+            <Card className="overflow-hidden shadow-2xl bg-white">
+              <div className="h-96 flex items-center justify-center p-8">
+                <img 
+                  src={pizzaPlusLogo} 
+                  alt="Pizza Plus Logo" 
+                  className="max-w-full max-h-full object-contain"
+                />
+              </div>
             </Card>
             
             {/* Stats */}
