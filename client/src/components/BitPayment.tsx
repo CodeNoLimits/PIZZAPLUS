@@ -29,7 +29,7 @@ const BitPayment: React.FC<BitPaymentProps> = ({
     email: '',
     address: ''
   });
-  const [paymentMethod, setPaymentMethod] = useState<'bit' | 'card' | 'icount' | 'cash'>('bit');
+  const [paymentMethod, setPaymentMethod] = useState<'bit' | 'cash'>('bit');
   const [isProcessing, setIsProcessing] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
 
