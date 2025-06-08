@@ -1,21 +1,13 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { GEMINI_API_KEY } from '../constants';
 
-let genAI: GoogleGenerativeAI | null = null;
-
-if (GEMINI_API_KEY) {
-  genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-}
+const API_KEY = 'AIzaSyAlIBrQ16b_xVo-gY5JyBTCEEnfyUdjT7I';
 
 export async function sendMessageToGemini(message: string, history: any[], language: string): Promise<string> {
-  if (!genAI) {
-    return 'מצטער, שירות הצ\'אט אינו זמין כרגע. אנא צרו קשר טלפונית.';
-  }
-
   try {
+    const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    const systemInstruction = `You are a friendly customer service assistant for Pizza Plus, a kosher pizza restaurant in Jerusalem, Israel.
+    const systemInstruction = `You are a helpful customer service assistant for Pizza Plus, a kosher pizza restaurant in Jerusalem, Israel.
 
 Restaurant Details:
 - Name: Pizza Plus (פיצה פלוס)
@@ -68,20 +60,29 @@ Website Features: Online menu with cart, multilingual support (Hebrew/English/Fr
 
 Always respond in ${language === 'he' ? 'Hebrew' : language === 'en' ? 'English' : language === 'fr' ? 'French' : 'Russian'}. Be helpful, friendly, and encourage orders via WhatsApp 054-6083500. Help calculate prices with toppings and guide ordering.`;
 
-    const chat = model.startChat({
-      history: history,
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: systemInstruction + '\n\nUser message: ' + message }]
+        }
+      ],
       generationConfig: {
-        maxOutputTokens: 200,
-      },
+        maxOutputTokens: 300,
+        temperature: 0.7,
+      }
     });
 
-    const result = await chat.sendMessage(systemInstruction + '\n\nUser: ' + message);
-    const response = await result.response;
+    const response = result.response;
     return response.text();
   } catch (error) {
     console.error('Gemini API error:', error);
     return language === 'he' 
       ? 'מצטער, אירעה שגיאה. אנא נסה שוב או צור קשר טלפונית.'
+      : language === 'fr'
+      ? 'Désolé, une erreur s\'est produite. Veuillez réessayer ou nous contacter par téléphone.'
+      : language === 'ru'
+      ? 'Извините, произошла ошибка. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.'
       : 'Sorry, an error occurred. Please try again or contact us by phone.';
   }
 }

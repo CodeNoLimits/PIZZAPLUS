@@ -362,8 +362,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'fish-chips',
     nameHe: 'פיש & צ\'יפס',
     nameEn: 'Fish & Chips',
+    nameFr: 'Poisson et Frites',
+    nameRu: 'Рыба с Картофелем',
     descriptionHe: 'דג מטוגן בציפוי פריך עם צ\'יפס',
     descriptionEn: 'Fried fish in crispy coating with chips',
+    descriptionFr: 'Poisson frit dans un enrobage croustillant avec frites',
+    descriptionRu: 'Жареная рыба в хрустящей панировке с картофелем фри',
     price: 6800, // ₪68
     category: 'mains',
     available: true,
@@ -372,8 +376,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'cheese-crust',
     nameHe: 'צ\'יז קראסט',
     nameEn: 'Cheese Crust Pizza',
+    nameFr: 'Pizza Croûte au Fromage',
+    nameRu: 'Пицца с Сырной Корочкой',
     descriptionHe: 'מגש פיצה עם קראסט ממולא בגבינה',
     descriptionEn: 'Pizza tray with cheese-stuffed crust',
+    descriptionFr: 'Pizza avec croûte farcie au fromage',
+    descriptionRu: 'Пицца с корочкой, фаршированной сыром',
     price: 7200, // ₪72
     category: 'mains',
     available: true,
@@ -382,8 +390,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'soup-seasonal',
     nameHe: 'מרקים (בעונה)',
     nameEn: 'Soups (seasonal)',
+    nameFr: 'Soupes (saisonnières)',
+    nameRu: 'Супы (сезонные)',
     descriptionHe: 'מרק חם בעונה',
     descriptionEn: 'Hot seasonal soup',
+    descriptionFr: 'Soupe chaude de saison',
+    descriptionRu: 'Горячий сезонный суп',
     price: 3200, // ₪32
     category: 'mains',
     available: true,
@@ -392,8 +404,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'chocolate-sticks',
     nameHe: 'מקלות שוקולד',
     nameEn: 'Chocolate Sticks',
+    nameFr: 'Bâtonnets au Chocolat',
+    nameRu: 'Шоколадные Палочки',
     descriptionHe: 'מקלות עם שוקולד',
     descriptionEn: 'Sticks with chocolate',
+    descriptionFr: 'Bâtonnets avec chocolat',
+    descriptionRu: 'Палочки с шоколадом',
     price: 3200, // ₪32
     category: 'desserts',
     available: true,
@@ -404,8 +420,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'fries-small',
     nameHe: 'צ\'יפס קטן',
     nameEn: 'Small Chips',
+    nameFr: 'Petites Frites',
+    nameRu: 'Маленькая Картошка',
     descriptionHe: 'מנה קטנה',
     descriptionEn: 'Small portion',
+    descriptionFr: 'Petite portion',
+    descriptionRu: 'Маленькая порция',
     price: 1500, // ₪15
     category: 'sides',
     available: true,
@@ -414,8 +434,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'fries-large',
     nameHe: 'צ\'יפס גדול',
     nameEn: 'Large Chips',
+    nameFr: 'Grosses Frites',
+    nameRu: 'Большая Картошка',
     descriptionHe: 'מנה גדולה',
     descriptionEn: 'Large portion',
+    descriptionFr: 'Grande portion',
+    descriptionRu: 'Большая порция',
     price: 2400, // ₪24
     category: 'sides',
     available: true,
@@ -424,8 +448,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'garlic-bread',
     nameHe: 'לחם שום',
     nameEn: 'Garlic Bread',
+    nameFr: 'Pain à l\'Ail',
+    nameRu: 'Чесночный Хлеб',
     descriptionHe: 'מנה',
     descriptionEn: 'Portion',
+    descriptionFr: 'Portion',
+    descriptionRu: 'Порция',
     price: 2200, // ₪22
     category: 'sides',
     available: true,
@@ -436,8 +464,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'bottle-large',
     nameHe: 'בקבוק גדול',
     nameEn: 'Large Bottle',
+    nameFr: 'Grande Bouteille',
+    nameRu: 'Большая Бутылка',
     descriptionHe: 'בקבוק',
     descriptionEn: 'Bottle',
+    descriptionFr: 'Bouteille',
+    descriptionRu: 'Бутылка',
     price: 1500, // ₪15
     category: 'drinks',
     available: true,
@@ -446,8 +478,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'bottle-small',
     nameHe: 'בקבוק קטן',
     nameEn: 'Small Bottle',
+    nameFr: 'Petite Bouteille',
+    nameRu: 'Маленькая Бутылка',
     descriptionHe: 'בקבוק',
     descriptionEn: 'Bottle',
+    descriptionFr: 'Bouteille',
+    descriptionRu: 'Бутылка',
     price: 1000, // ₪10
     category: 'drinks',
     available: true,
@@ -456,8 +492,12 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'can',
     nameHe: 'פחית',
     nameEn: 'Can',
+    nameFr: 'Canette',
+    nameRu: 'Банка',
     descriptionHe: 'פחית',
     descriptionEn: 'Can',
+    descriptionFr: 'Canette',
+    descriptionRu: 'Банка',
     price: 800, // ₪8
     category: 'drinks',
     available: true,
@@ -465,7 +505,7 @@ export const MENU_ITEMS: MenuItem[] = [
 ];
 
 export const TOPPINGS = [
-  // Pizza toppings with pricing info
+  // Pizza toppings with pricing info - ALL LANGUAGES INCLUDED
   { 
     id: 'tomatoes', 
     nameHe: 'עגבניות', 
