@@ -1,0 +1,268 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { GoogleGenAI } from "@google/genai";
+import { Language, MenuItem, CartItem, ChatMessage, TranslationSet } from './types';
+import { TRANSLATIONS, MENU_DATA, ALL_TOPPINGS } from './constants';
+import Header from './components/Header';
+import Hero from './components/Hero';
+import MenuSection from './components/MenuSection';
+import MenuItemCard from './components/MenuItemCard';
+import Gallery from './components/Gallery';
+import KosherBadge from './components/KosherBadge';
+import ContactInfo from './components/ContactInfo';
+import Chatbot from './components/Chatbot';
+import Cart from './components/Cart';
+
+// Ensure API_KEY is set in your environment variables
+const API_KEY = process.env.API_KEY;
+if (!API_KEY) {
+  console.warn("API_KEY for Gemini is not set. Chatbot will not function correctly.");
+}
+const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
+
+const App: React.FC = () => {
+  const [currentLanguage, setCurrentLanguage] = useState<Language>(Language.HE);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isBotTyping, setIsBotTyping] = useState(false);
+
+  const t = useCallback((key: keyof TranslationSet, ...args: (string | number)[]): string => {
+    const keyAsString = String(key);
+    const translation = 
+      TRANSLATIONS[currentLanguage]?.[keyAsString] ??
+      TRANSLATIONS[Language.EN]?.[keyAsString] ??
+      keyAsString; 
+    if (args.length > 0) {
+      return translation.replace(/%s/g, () => String(args.shift() || ''));
+    }
+    return translation;
+  }, [currentLanguage]);
+
+  useEffect(() => {
+    document.documentElement.dir = currentLanguage === Language.HE ? 'rtl' : 'ltr';
+    document.documentElement.lang = currentLanguage;
+  }, [currentLanguage]);
+
+  useEffect(() => {
+    const welcomeMessageText = t('welcome_message');
+    setChatMessages([{ id: Date.now().toString(), text: welcomeMessageText, sender: 'bot', timestamp: new Date() }]);
+  }, [currentLanguage, t]);
+
+  const handleLanguageChange = (lang: Language) => {
+    setCurrentLanguage(lang);
+  };
+
+  const addToCartHandler = (item: MenuItem, selectedToppingsValues: string[]) => {
+    const newItemId = Date.now().toString();
+    let itemTotalPrice = item.price;
+    
+    if (item.toppings && item.toppingPrice) {
+      itemTotalPrice += selectedToppingsValues.length * item.toppingPrice;
+    }
+
+    const existingItemIndex = cart.findIndex(cartItem => 
+      cartItem.id === item.id && 
+      JSON.stringify(cartItem.selectedToppings.sort()) === JSON.stringify(selectedToppingsValues.sort())
+    );
+
+    if (existingItemIndex > -1) {
+      const updatedCart = cart.map((cartItem, index) => 
+        index === existingItemIndex 
+          ? { ...cartItem, quantity: cartItem.quantity + 1, totalPrice: cartItem.totalPrice + (itemTotalPrice / (cartItem.quantity > 0 ? cartItem.quantity : 1)) } 
+          : cartItem
+      );
+      setCart(updatedCart);
+    } else {
+      setCart([...cart, { 
+        ...item, 
+        cartItemId: newItemId, 
+        quantity: 1, 
+        selectedToppings: selectedToppingsValues,
+        totalPrice: itemTotalPrice 
+      }]);
+    }
+        
+    setIsCartOpen(true); 
+  };
+
+  const removeFromCartHandler = (cartItemId: string) => {
+    setCart(cart.filter(item => item.cartItemId !== cartItemId));
+  };
+
+  const updateQuantityHandler = (cartItemId: string, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      removeFromCartHandler(cartItemId);
+      return;
+    }
+    setCart(cart.map(item => {
+      if (item.cartItemId === cartItemId) {
+        // Find the original menu item to get its base price
+        const originalMenuItem = MENU_DATA.flatMap(cat => cat.items).find(menuItem => menuItem.id === item.id);
+        if (!originalMenuItem) return item; // Should not happen
+
+        const toppingsCost = item.selectedToppings.length * (item.toppingPrice || 0);
+        const correctSingleItemTotalPrice = originalMenuItem.price + toppingsCost;
+
+        return { ...item, quantity: newQuantity, totalPrice: correctSingleItemTotalPrice };
+      }
+      return item;
+    }));
+  };
+
+  const toggleCartHandler = () => {
+    setIsCartOpen(!isCartOpen);
+     if (isChatOpen && !isCartOpen) setIsChatOpen(false); 
+  };
+
+  const toggleChatHandler = () => {
+    setIsChatOpen(!isChatOpen);
+    if (isCartOpen && !isChatOpen) setIsCartOpen(false);
+  };
+
+  const addChatMessage = (text: string, sender: 'user' | 'bot') => {
+    setChatMessages(prevMessages => [...prevMessages, { id: Date.now().toString(), text, sender, timestamp: new Date() }]);
+  };
+  
+  const getSystemInstruction = useCallback(() => {
+    const currency = t('currency_symbol');
+    const menuDetails = MENU_DATA.map(category => {
+      const categoryTitle = t(category.titleKey as keyof TranslationSet);
+      const itemsPrompt = category.items.map(item => {
+        let itemDesc = `${t(item.nameKey as keyof TranslationSet)}: ${item.price}${currency}`;
+        if (item.toppings && item.toppingPrice) {
+          const toppingNames = ALL_TOPPINGS.map(topInfo => t(topInfo.nameKey as keyof TranslationSet)).join(', ');
+          itemDesc += `. ${t('toppings')}: ${toppingNames}. ${t('each_topping_costs', item.toppingPrice, currency)}`;
+        }
+        if (item.descriptionKey) {
+          itemDesc += ` (${t(item.descriptionKey as keyof TranslationSet)})`;
+        }
+        return `- ${itemDesc}`;
+      }).join('\n');
+      return `${categoryTitle}:\n${itemsPrompt}`;
+    }).join('\n\n');
+
+    return `You are a friendly and helpful customer service assistant for Pizza Plus, a kosher pizza restaurant in Jerusalem.
+Your name is Pizza Plus Bot.
+Restaurant Name: ${t('main_title')}
+Slogan: ${t('subtitle')}
+Kosher Status: ${t('kosher_title')}, ${t('kosher_text')}, ${t('kosher_valid')}
+Location: ${t('address')}
+Phone: 02-6363-108
+WhatsApp for orders: 054-6083500
+Opening Hours: Sunday-Thursday: 11:00-23:00, Friday: 11:00-15:00, Saturday night: 20:00-23:00.
+Delivery: Available throughout Jerusalem, order via WhatsApp.
+
+Menu:
+${menuDetails}
+
+Be concise and polite. If asked about something outside of Pizza Plus, politely state that you can only help with Pizza Plus related inquiries. Do not make up information not provided here.
+Current language for response should be ${currentLanguage === 'he' ? 'Hebrew' : currentLanguage === 'fr' ? 'French' : 'English'}.
+Always respond in the user's language if discernible, otherwise default to the current interface language (${currentLanguage}).
+`;
+  }, [t, currentLanguage]);
+
+  const handleSendChatMessage = async (messageText: string) => {
+    if (!messageText.trim()) return;
+    addChatMessage(messageText, 'user');
+
+    if (!ai) {
+      addChatMessage(t('chatbot_error_message'), 'bot');
+      return;
+    }
+
+    setIsBotTyping(true);
+    try {
+      const systemInstruction = getSystemInstruction();
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-preview-04-17',
+        contents: [{ role: "user", parts: [{text: messageText}] }],
+        config: {
+          systemInstruction: systemInstruction,
+        }
+      });
+      addChatMessage(response.text, 'bot');
+    } catch (error) {
+      console.error("Gemini API error:", error);
+      addChatMessage(t('chatbot_error_message'), 'bot');
+    } finally {
+      setIsBotTyping(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isCartOpen && !target.closest('.cart-container-selector') && !target.closest('.cart-window-selector')) {
+        setIsCartOpen(false);
+      }
+      if (isChatOpen && !target.closest('.chatbot-container-selector') && !target.closest('.chatbot-window-selector')) {
+        setIsChatOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isCartOpen, isChatOpen]);
+
+  return (
+    <div className={`font-heebo ${currentLanguage === Language.HE ? 'rtl' : 'ltr'} bg-gray-50 min-h-screen`}>
+      <Header
+        currentLanguage={currentLanguage}
+        onLanguageChange={handleLanguageChange}
+        cartItemCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
+        onToggleCart={toggleCartHandler}
+        t={t}
+      />
+      
+      <Cart
+        isOpen={isCartOpen}
+        cartItems={cart}
+        onClose={toggleCartHandler}
+        onRemoveItem={removeFromCartHandler}
+        onUpdateQuantity={updateQuantityHandler}
+        currentLanguage={currentLanguage}
+        t={t}
+      />
+
+      <Hero t={t} />
+
+      <main className="max-w-6xl mx-auto p-4">
+        <Gallery t={t} />
+
+        {MENU_DATA.map(category => (
+          <MenuSection key={category.titleKey} title={t(category.titleKey as keyof TranslationSet)}>
+            <div className={`grid grid-cols-1 ${category.titleKey === 'salads_title' || category.titleKey === 'specials_title' || category.titleKey === 'sides_title' || category.titleKey === 'drinks_title' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2 md:grid-cols-3'} gap-6`}>
+              {category.items.map(item => (
+                <MenuItemCard 
+                  key={item.id} 
+                  item={item} 
+                  onAddToCart={addToCartHandler} 
+                  t={t}
+                  allToppings={ALL_TOPPINGS}
+                  currentLanguage={currentLanguage}
+                />
+              ))}
+            </div>
+          </MenuSection>
+        ))}
+
+        <KosherBadge t={t} />
+        <ContactInfo t={t} currentLanguage={currentLanguage} />
+      </main>
+      
+      <Chatbot 
+        isOpen={isChatOpen}
+        messages={chatMessages}
+        onToggleChat={toggleChatHandler}
+        onSendMessage={handleSendChatMessage}
+        t={t}
+        isBotTyping={isBotTyping}
+      />
+    </div>
+  );
+};
+
+export default App;

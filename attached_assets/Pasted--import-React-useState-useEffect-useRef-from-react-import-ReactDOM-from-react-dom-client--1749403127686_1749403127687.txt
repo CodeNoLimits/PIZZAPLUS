@@ -1,0 +1,662 @@
+
+import React, { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom/client';
+import { GoogleGenAI, GenerateContentResponse, Chat, Part } from "@google/genai";
+
+// --- Data (Translations and Menu) ---
+const translations = {
+    he: {
+        analyzeOrderBtn: "✨ ניתוח ההזמנה שלי", analysisThinking: "השף מנתח את ההזמנה שלך...", analysisCritiqueTitle: "🧐 חוות הדעת של השף:", analysisSuggestionTitle: "💡 ההצעה של השף:",
+        aiChefTitle: "✨ לא בטוחים מה לבחור? תנו לשף ה-AI שלנו להרכיב לכם פיצה! ✨", aiChefSubtitle: "ספרו לנו על מה מתחשק לכם והוא יצור לכם מתכון ייחודי.", aiChefPlaceholder: "אני רוצה פיצה...", aiChefButton: "הצע לי פיצה ✨", aiChefModalTitle: "הנה ההצעה של שף ה-AI:", aiChefThinking: "השף חושב על מתכון...",
+        cartTitle: "ההזמנה שלך", cartTotal: "סה\"כ:", orderWhatsapp: "שלח הזמנה בוואטסאפ", payBit: "שלם עם Bit", cartEmpty: "העגלה שלך ריקה",
+        chatTitle: "אסיסטנט פיצה פלוס", chatWelcome: "שלום! אני האסיסטנט של פיצה פלוס. איך אני יכול לעזור לך היום?", chatPlaceholder: "כתוב הודעה...",
+        bitTitle: "תשלום באמצעות Bit", bitInstruction: "כדי להשלים את התשלום, אנא פתח את אפליקציית Bit ואשר את בקשת התשלום שנשלחה אליך.", bitDisclaimer: "(זוהי סימולציה. באינטגרציה אמיתית, תיווצר בקשת תשלום אוטומטית.)",
+        addToCart: "הוסף",
+        navMenu: "תפריט", navAbout: "אודות", navGallery: "גלריה", navContact: "צור קשר", orderButton: "להזמנה",
+        heroTitle: "השלמות בכל ביס", heroSubtitle: "פיצה כשרה וטעימה במיוחד, מחכה לכם.", heroCta: "צפה בתפריט והזמן עכשיו",
+        menuTitle: "התפריט שלנו", galleryTitle: "האווירה שלנו", aboutTitle: "הסיפור שלנו",
+        aboutText: "פיצה פלוס היא לא עוד פיצריה. אנחנו מוסד ירושלמי ותיק, המגיש באהבה פיצות כשרות ואיכותיות עם המרכיבים הטריים ביותר. כל פיצה נאפית בתנור לבנים מסורתי כדי להעניק לכם את הטעם המושלם בכל פעם.",
+        address: "רחוב יששכר 2, ירושלים, ישראל", phoneOrder: "להזמנות טלפוניות:",
+        categories: { pizzas: "פיצות", pastas: "פסטות", mains: "עיקריות", salads: "סלטים", sides: "נלווים", desserts: "קינוחים", toppings: "תוספות" },
+        errorOccurred: "אופס! משהו השתבש. אנא נסה שוב מאוחר יותר.",
+        customPizzaAdded: "פיצה מותאמת אישית נוספה לעגלה!"
+    },
+    en: { /* ... English Translations ... */ },
+    fr: { /* ... French Translations ... */ },
+    ru: { /* ... Russian Translations ... */ }
+};
+translations.en = { ...translations.he, ...{ analyzeOrderBtn: "✨ Analyze My Order", analysisThinking: "The Chef is analyzing your order...", analysisCritiqueTitle: "🧐 The Chef's Opinion:", analysisSuggestionTitle: "💡 The Chef's Suggestion:", aiChefTitle: "✨ Not sure what to choose? Let our AI Chef create a pizza for you! ✨", aiChefSubtitle: "Tell us what you're in the mood for and it will create a unique recipe.", aiChefPlaceholder: "I'm craving a pizza that is...", aiChefButton: "Suggest a Pizza ✨", aiChefModalTitle: "Here is the AI Chef's suggestion:", aiChefThinking: "The Chef is thinking of a recipe...", cartTitle: "Your Order", cartTotal: "Total:", orderWhatsapp: "Send Order via WhatsApp", payBit: "Pay with Bit", cartEmpty: "Your cart is empty", chatTitle: "Pizza Plus Assistant", chatWelcome: "Hello! I'm the Pizza Plus assistant. How can I help you today?", chatPlaceholder: "Type a message...", bitTitle: "Payment via Bit", bitInstruction: "To complete the payment, please open your Bit app and approve the payment request.", bitDisclaimer: "(This is a simulation...)", addToCart: "Add", navMenu: "Menu", navAbout: "About", navGallery: "Gallery", navContact: "Contact", orderButton: "Order", heroTitle: "Perfection in Every Slice", heroSubtitle: "Delicious kosher pizza is waiting for you.", heroCta: "View Menu & Order Now", menuTitle: "Our Menu", galleryTitle: "Our Vibe", aboutTitle: "Our Story", aboutText: "Pizza Plus is not just another pizzeria. We are a long-standing Jerusalem institution...", address: "2 Ish Matsliah St, Jerusalem, Israel", phoneOrder: "For phone orders:", categories: { pizzas: "Pizzas", pastas: "Pastas", mains: "Mains", salads: "Salads", sides: "Sides", desserts: "Desserts", toppings: "Toppings" }, errorOccurred: "Oops! Something went wrong. Please try again later.", customPizzaAdded: "Custom pizza added to cart!" }};
+translations.fr = { ...translations.en, ...{ analyzeOrderBtn: "✨ Analyser ma Commande", analysisThinking: "Le Chef analyse votre commande...", analysisCritiqueTitle: "🧐 L'Avis du Chef :", analysisSuggestionTitle: "💡 La Suggestion du Chef :", aiChefTitle: "✨ Pas certain de votre choix ? Laissez notre Chef IA créer votre pizza ! ✨", aiChefSubtitle: "Dites-nous ce qui vous ferait plaisir et il vous créera une recette unique.", aiChefPlaceholder: "J'ai envie d'une pizza qui soit...", aiChefButton: "Suggère-moi une Pizza ✨", aiChefModalTitle: "Voici la suggestion du Chef IA :", aiChefThinking: "Le Chef réfléchit à une recette...", cartTitle: "Votre Commande", cartTotal: "Total :", orderWhatsapp: "Envoyer la commande sur WhatsApp", payBit: "Payer avec Bit", cartEmpty: "Votre panier est vide", chatTitle: "Assistant Pizza Plus", chatWelcome: "Bonjour ! Je suis l'assistant de Pizza Plus. Comment puis-je vous aider?", chatPlaceholder: "Écrire un message...", bitTitle: "Paiement via Bit", bitInstruction: "Pour finaliser le paiement, veuillez ouvrir votre application Bit...", bitDisclaimer: "(Ceci est une simulation...)", addToCart: "Ajouter", navMenu: "Menu", navAbout: "À Propos", navGallery: "Galerie", navContact: "Contact", orderButton: "Commander", heroTitle: "La Perfection dans Chaque Part", heroSubtitle: "De délicieuses pizzas casher vous attendent.", heroCta: "Voir le Menu & Commander", menuTitle: "Notre Menu", galleryTitle: "Notre Ambiance", aboutTitle: "Notre Histoire", aboutText: "Pizza Plus n'est pas une simple pizzeria...", address: "2 Rue Ish Matsliah, Jérusalem, Israël", phoneOrder: "Pour les commandes par téléphone :", categories: { pizzas: "Pizzas", pastas: "Pâtes", mains: "Plats Principaux", salads: "Salades", sides: "Accompagnements", desserts: "Desserts", toppings: "Garnitures" }, errorOccurred: "Oups ! Quelque chose s'est mal passé. Veuillez réessayer plus tard.", customPizzaAdded: "Pizza personnalisée ajoutée au panier !" }};
+translations.ru = { ...translations.en, ...{ analyzeOrderBtn: "✨ Анализировать мой заказ", analysisThinking: "Шеф-повар анализирует ваш заказ...", analysisCritiqueTitle: "🧐 Мнение шеф-повара:", analysisSuggestionTitle: "💡 Предложение шеф-повара:", aiChefTitle: "✨ Не уверены, что выбрать? Позвольте нашему ИИ-шефу создать пиццу для вас! ✨", aiChefSubtitle: "Расскажите нам, чего вам хочется, и он создаст для вас уникальный рецепт.", aiChefPlaceholder: "Я хочу пиццу, которая...", aiChefButton: "Предложи пиццу ✨", aiChefModalTitle: "Вот предложение от ИИ-шефа:", aiChefThinking: "Шеф-повар придумывает рецепт...", cartTitle: "Ваш заказ", cartTotal: "Итого:", orderWhatsapp: "Отправить заказ через WhatsApp", payBit: "Оплатить через Bit", cartEmpty: "Ваша корзина пуста", chatTitle: "Ассистент Пицца Плюс", chatWelcome: "Здравствуйте! Я ассистент Пицца Плюс. Чем я могу вам помочь?", chatPlaceholder: "Введите сообщение...", bitTitle: "Оплата через Bit", bitInstruction: "Для завершения платежа, пожалуйста, откройте приложение Bit...", bitDisclaimer: "(Это симуляция...)", addToCart: "Добавить", navMenu: "Меню", navAbout: "О нас", navGallery: "Галерея", navContact: "Контакты", orderButton: "Заказать", heroTitle: "Совершенство в каждом куске", heroSubtitle: "Вкусная кошерная пицца ждет вас.", heroCta: "Посмотреть меню и заказать", menuTitle: "Наше меню", galleryTitle: "Наша атмосфера", aboutTitle: "Наша история", aboutText: "Пицца Плюс — это не просто очередная пиццерия...", address: "ул. Иш Мацлиах 2, Иерусалим, Израиль", phoneOrder: "Для заказов по телефону:", categories: { pizzas: "Пиццы", pastas: "Пасты", mains: "Основные блюда", salads: "Салаты", sides: "Гарниры", desserts: "Десерты", toppings: "Топпинги" }, errorOccurred: "Ой! Что-то пошло не так. Пожалуйста, попробуйте позже.", customPizzaAdded: "Пользовательская пицца добавлена в корзину!" }};
+
+type LangKey = keyof typeof translations;
+type TranslationSet = typeof translations.he;
+
+type MenuItemNameDesc = {
+    he: string;
+    en: string;
+    fr: string;
+    ru: string;
+};
+
+type MenuItem = {
+    id: string;
+    price: number;
+    image: string;
+    names: MenuItemNameDesc;
+    descriptions: MenuItemNameDesc;
+    isCustom?: boolean; // For AI Chef pizzas
+    name?: string; // For AI Chef pizzas display name
+    description?: string; // For AI Chef pizzas display description
+};
+
+type CartItem = MenuItem & {
+    quantity: number;
+};
+
+type ChatMessage = {
+    id: string;
+    text: string;
+    sender: 'user' | 'gemini';
+};
+
+type AiPizzaSuggestion = {
+    name: string;
+    description: string;
+    ingredients: string[];
+    price?: number; // Optional price for suggested pizza
+};
+
+type OrderAnalysis = {
+    critique: string;
+    suggestion: string;
+};
+
+const menuData: Record<string, MenuItem[]> = {
+    pizzas: [
+        { id: "p1", price: 45, image: "1000185475.jpg", names: { he: "מגש L", en: "Pizza L", fr: "Pizza L", ru: "Пицца L" }, descriptions: { he: "פיצה קוטר 36 עם רוטב עגבניות ומוצרלה", en: "36cm pizza with tomato sauce and mozzarella", fr: "Pizza 36cm avec sauce tomate et mozzarella", ru: "Пицца 36см с томатным соусом и моцареллой" } },
+        { id: "p2", price: 28, image: "https://source.unsplash.com/600x400/?personal-pizza", names: { he: "מגש אישי", en: "Personal Pizza", fr: "Pizza Individuelle", ru: "Персональная пицца" }, descriptions: { he: "פיצה אישית עם רוטב עגבניות ומוצרלה", en: "Personal pizza with tomato sauce and mozzarella", fr: "Pizza individuelle avec sauce tomate et mozzarella", ru: "Персональная пицца с томатным соусом и моцареллой" } }
+    ],
+    pastas: [
+        { id: "pa1", price: 45, image: "https://source.unsplash.com/600x400/?tomato-basil-pasta", names: { he: "רוטב עגבניות ובזיליקום", en: "Tomato and Basil Pasta", fr: "Pâtes Tomate et Basilic", ru: "Паста с томатом и базиликом" }, descriptions: { he: "פסטה ברוטב עגבניות טרי עם בזיליקום", en: "Pasta in fresh tomato sauce with basil", fr: "Pâtes à la sauce tomate fraîche et basilic", ru: "Паста в свежем томатном соусе с базиликом" } },
+        { id: "pa2", price: 45, image: "https://source.unsplash.com/600x400/?mushroom-cream-pasta", names: { he: "שמנת פטריות", en: "Mushroom Cream Pasta", fr: "Pâtes Crème Champignons", ru: "Паста со сливочно-грибным соусом" }, descriptions: { he: "פסטה ברוטב שמנת עם פטריות טריות", en: "Pasta in cream sauce with fresh mushrooms", fr: "Pâtes à la crème avec champignons frais", ru: "Паста в сливочном соусе со свежими грибами" } },
+        { id: "pa3", price: 45, image: "https://source.unsplash.com/600x400/?rose-pasta", names: { he: "רוזה", en: "Rosé Pasta", fr: "Pâtes Rosé", ru: "Паста Розе" }, descriptions: { he: "פסטה ברוטב עגבניות ושמנת", en: "Pasta in tomato and cream sauce", fr: "Pâtes à la sauce tomate et crème", ru: "Паста в томатно-сливочном соусе" } }
+    ],
+    salads: [
+        { id: "s1", price: 35, image: "https://source.unsplash.com/600x400/?fresh-salad", names: { he: "סלט קטן", en: "Small Salad", fr: "Petite Salade", ru: "Маленький салат" }, descriptions: { he: "ירקות טריים בתיבול שמן זית ולימון", en: "Fresh vegetables with olive oil and lemon dressing", fr: "Légumes frais avec vinaigrette à l'huile d'olive et citron", ru: "Свежие овощи с заправкой из оливкового масла и лимона" } },
+        { id: "s2", price: 50, image: "https://source.unsplash.com/600x400/?large-fresh-salad", names: { he: "סלט גדול", en: "Large Salad", fr: "Grande Salade", ru: "Большой салат" }, descriptions: { he: "ירקות טריים בתיבול שמן זית ולימון", en: "Fresh vegetables with olive oil and lemon dressing", fr: "Légumes frais avec vinaigrette à l'huile d'olive et citron", ru: "Свежие овощи с заправкой из оливкового масла и лимона" } }
+    ],
+    mains: [
+        { id: "m1", price: 61, image: "https://source.unsplash.com/600x400/?fish-and-chips", names: { he: "פיש & צ'יפס", en: "Fish & Chips", fr: "Fish & Chips", ru: "Фиш энд чипс" }, descriptions: { he: "דג מטוגן בציפוי פריך עם צ'יפס", en: "Fried fish in a crispy coating with fries", fr: "Poisson frit dans une panure croustillante avec des frites", ru: "Жареная рыба в хрустящей панировке с картофелем фри" } },
+        { id: "m2", price: 63, image: "https://source.unsplash.com/600x400/?chicken-cordon-bleu", names: { he: "צ'יז קראסט", en: "Cheese Crust", fr: "Croûte de Fromage", ru: "Сырная корочка" }, descriptions: { he: "חזה עוף ממולא בגבינה והם מטוגן", en: "Chicken breast stuffed with cheese, breaded and fried", fr: "Poitrine de poulet farcie au fromage, panée et frite", ru: "Куриная грудка с сырной начинкой в панировке, жареная" } },
+        { id: "m3", price: 25, image: "https://source.unsplash.com/600x400/?tomato-soup", names: { he: "מרקים (בעונה)", en: "Soups (in season)", fr: "Soupes (en saison)", ru: "Супы (сезонные)" }, descriptions: { he: "מרק חם ומהביל", en: "Hot and steamy soup", fr: "Soupe chaude et fumante", ru: "Горячий и ароматный суп" } }
+    ],
+    sides: [
+        { id: "sd1", price: 12, image: "https://source.unsplash.com/600x400/?french-fries", names: { he: "צ'יפס קטן", en: "Small Fries", fr: "Petite Frite", ru: "Маленькая картошка фри" }, descriptions: { he: "מנה קטנה של צ'יפס זהוב", en: "A small portion of golden fries", fr: "Une petite portion de frites dorées", ru: "Маленькая порция золотистой картошки фри" } },
+        { id: "sd2", price: 18, image: "https://source.unsplash.com/600x400/?large-french-fries", names: { he: "צ'יפס גדול", en: "Large Fries", fr: "Grande Frite", ru: "Большая картошка фри" }, descriptions: { he: "מנה גדולה של צ'יפס זהוב", en: "A large portion of golden fries", fr: "Une grande portion de frites dorées", ru: "Большая порция золотистой картошки фри" } },
+        { id: "sd3", price: 12, image: "https://source.unsplash.com/600x400/?garlic-bread", names: { he: "לחם שום", en: "Garlic Bread", fr: "Pain à l'ail", ru: "Чесночный хлеб" }, descriptions: { he: "לחם אפוי עם שום וחמאה", en: "Baked bread with garlic and butter", fr: "Pain cuit au four avec de l'ail et du beurre", ru: "Запеченный хлеб с чесноком и маслом" } }
+    ],
+     desserts: [
+        { id: "de1", price: 25, image: "https://source.unsplash.com/600x400/?chocolate-breadsticks", names: { he: "מקלות שוקולד", en: "Chocolate Sticks", fr: "Bâtonnets au chocolat", ru: "Шоколадные палочки" }, descriptions: { he: "מקלות בצק פריכים עם שוקולד חם", en: "Crispy dough sticks with hot chocolate", fr: "Bâtonnets de pâte croustillants avec du chocolat chaud", ru: "Хрустящие палочки из теста с горячим шоколадом" } }
+    ],
+    toppings: [
+        { id: "t1", price: 7, image: "https://source.unsplash.com/300x200/?chopped-tomatoes", names: { he: "עגבניות", en: "Tomatoes", fr: "Tomates", ru: "Помидоры" }, descriptions: { he: "תוספת עגבניות טריות", en: "Fresh tomato topping", fr: "Garniture de tomates fraîches", ru: "Топпинг из свежих помидоров" } },
+        { id: "t2", price: 7, image: "https://source.unsplash.com/300x200/?chopped-onions", names: { he: "בצל", en: "Onion", fr: "Oignon", ru: "Лук" }, descriptions: { he: "תוספת בצל טרי", en: "Fresh onion topping", fr: "Garniture d'oignon frais", ru: "Топпинг из свежего лука" } },
+        { id: "t3", price: 7, image: "https://source.unsplash.com/300x200/?olives", names: { he: "זיתים", en: "Olives", fr: "Olives", ru: "Оливки" }, descriptions: { he: "ירוקים או שחורים", en: "Green or black", fr: "Vertes ou noires", ru: "Зеленые или черные" } },
+        { id: "t4", price: 7, image: "https://source.unsplash.com/300x200/?sliced-mushrooms", names: { he: "פטריות", en: "Mushrooms", fr: "Champignons", ru: "Грибы" }, descriptions: { he: "תוספת פטריות טריות", en: "Fresh mushroom topping", fr: "Garniture de champignons frais", ru: "Топпинг из свежих грибов" } },
+        { id: "t5", price: 9, image: "https://source.unsplash.com/300x200/?feta-cheese", names: { he: "בולגרית", en: "Bulgarian Cheese", fr: "Fromage Bulgare", ru: "Брынза" }, descriptions: { he: "תוספת גבינה בולגרית", en: "Bulgarian cheese topping", fr: "Garniture de fromage bulgare", ru: "Топпинг из брынзы" } },
+        { id: "t6", price: 7, image: "https://source.unsplash.com/300x200/?sweet-corn", names: { he: "תירס", en: "Corn", fr: "Maïs", ru: "Кукуруза" }, descriptions: { he: "תוספת תירס מתוק", en: "Sweet corn topping", fr: "Garniture de maïs doux", ru: "Топпинг из сладкой кукурузы" } },
+        { id: "t7", price: 9, image: "https://source.unsplash.com/300x200/?tuna-flakes", names: { he: "טונה", en: "Tuna", fr: "Thon", ru: "Тунец" }, descriptions: { he: "תוספת טונה", en: "Tuna topping", fr: "Garniture de thon", ru: "Топпинг из тунца" } },
+        { id: "t8", price: 8, image: "https://source.unsplash.com/300x200/?sliced-hard-boiled-egg", names: { he: "ביצה קשה", en: "Hard-boiled Egg", fr: "Œuf dur", ru: "Вареное яйцо" }, descriptions: { he: "תוספת ביצה קשה", en: "Hard-boiled egg topping", fr: "Garniture d'œuf dur", ru: "Топпинг из вареного яйца" } }
+    ]
+};
+
+// Initialize the GoogleGenAI client assuming API_KEY is always available from process.env
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY }); 
+
+// Helper to parse Gemini JSON output
+const parseGeminiJsonResponse = <T,>(responseText: string): T | null => {
+    let jsonStr = responseText.trim();
+    const fenceRegex = /^```(\w*)?\s*\n?(.*?)\n?\s*```$/s;
+    const match = jsonStr.match(fenceRegex);
+    if (match && match[2]) {
+        jsonStr = match[2].trim();
+    }
+    try {
+        return JSON.parse(jsonStr) as T;
+    } catch (e: any) {
+        console.error("Failed to parse JSON response:", e, "Original text:", responseText);
+        return null;
+    }
+};
+
+
+// --- App Component ---
+const App: React.FC = () => {
+    const [currentLang, setCurrentLang] = useState<LangKey>(() => (localStorage.getItem('pizzaPlusLang') as LangKey) || 'he');
+    const [t, setT] = useState<TranslationSet>(translations[currentLang]);
+    const [cart, setCart] = useState<CartItem[]>([]);
+    const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+    const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [isBitModalOpen, setIsBitModalOpen] = useState(false);
+    const [isAiSuggestionModalOpen, setIsAiSuggestionModalOpen] = useState(false);
+    const [aiChefPrompt, setAiChefPrompt] = useState('');
+    const [currentAiSuggestion, setCurrentAiSuggestion] = useState<AiPizzaSuggestion | null>(null);
+    const [orderAnalysisResult, setOrderAnalysisResult] = useState<OrderAnalysis | null>(null);
+    const [isLoadingAiChef, setIsLoadingAiChef] = useState(false);
+    const [isLoadingOrderAnalysis, setIsLoadingOrderAnalysis] = useState(false);
+    const [isLoadingChat, setIsLoadingChat] = useState(false);
+    const [chatInput, setChatInput] = useState('');
+    const geminiChatInstance = useRef<Chat | null>(null);
+    const chatMessagesEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const dir = currentLang === 'he' ? 'rtl' : 'ltr';
+        document.documentElement.lang = currentLang;
+        document.documentElement.dir = dir;
+        localStorage.setItem('pizzaPlusLang', currentLang);
+        setT(translations[currentLang]);
+    }, [currentLang]);
+
+    useEffect(() => {
+        geminiChatInstance.current = ai.chats.create({
+            model: 'gemini-2.5-flash-preview-04-17',
+            config: { systemInstruction: `You are a helpful assistant for Pizza Plus, a kosher pizza restaurant in Jerusalem. Be friendly and concise. The user's language is ${currentLang}. Respond in that language.` },
+        });
+        setChatHistory([{ id: 'welcome', text: translations[currentLang].chatWelcome, sender: 'gemini' }]);
+    }, [currentLang]); 
+
+    useEffect(() => {
+        chatMessagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [chatHistory]);
+
+    const changeLanguage = (lang: LangKey) => setCurrentLang(lang);
+
+    const findMenuItemById = (id: string): MenuItem | null => {
+        for (const categoryKey in menuData) {
+            const item = menuData[categoryKey].find(item => item.id === id);
+            if (item) return item;
+        }
+        return null;
+    };
+
+    const addToCart = (itemOrId: MenuItem | string) => {
+        setCart(prevCart => {
+            const newItemIsObject = typeof itemOrId !== 'string';
+            const itemId = newItemIsObject ? (itemOrId as MenuItem).id : itemOrId as string;
+            const existingItemIndex = prevCart.findIndex(cartItem => cartItem.id === itemId);
+
+            if (existingItemIndex > -1) {
+                const updatedCart = [...prevCart];
+                updatedCart[existingItemIndex].quantity++;
+                return updatedCart;
+            } else {
+                if (newItemIsObject) {
+                     return [...prevCart, { ...(itemOrId as MenuItem), quantity: 1 }];
+                }
+                const menuItem = findMenuItemById(itemId);
+                return menuItem ? [...prevCart, { ...menuItem, quantity: 1 }] : prevCart;
+            }
+        });
+        if (typeof itemOrId !== 'string' && (itemOrId as MenuItem).isCustom) {
+            alert(t.customPizzaAdded);
+        }
+    };
+
+    const removeFromCart = (id: string) => {
+        setCart(prevCart => {
+            const itemIndex = prevCart.findIndex(item => item.id === id);
+            if (itemIndex > -1) {
+                const updatedCart = [...prevCart];
+                if (updatedCart[itemIndex].quantity > 1) {
+                    updatedCart[itemIndex].quantity--;
+                } else {
+                    updatedCart.splice(itemIndex, 1);
+                }
+                return updatedCart;
+            }
+            return prevCart;
+        });
+    };
+
+    const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    const handleAiChefSubmit = async () => {
+        if (!aiChefPrompt.trim()) return;
+        setIsLoadingAiChef(true);
+        setCurrentAiSuggestion(null);
+        setIsAiSuggestionModalOpen(true);
+
+        const prompt = `You are an AI Chef for "Pizza Plus". A customer wants a pizza suggestion. Their request is: "${aiChefPrompt}".
+        The restaurant has standard pizza toppings like tomatoes, onions, olives, mushrooms, feta, corn, tuna, hard-boiled egg.
+        Invent a creative kosher pizza. Give it a fun name. List its key ingredients (3-5). Provide a short, enticing description.
+        Estimate a fair price in NIS (e.g., between 50-75 NIS).
+        You MUST respond with ONLY a valid JSON object.
+        The JSON object must have these exact keys: "name" (string), "description" (string), "ingredients" (array of strings), "price" (number).
+        The user's language is ${currentLang}. Respond in that language for name, description, and ingredients.`;
+
+        try {
+            const response = await ai.models.generateContent({
+                model: 'gemini-2.5-flash-preview-04-17',
+                contents: prompt, 
+                config: { responseMimeType: "application/json" }
+            });
+            const suggestion = parseGeminiJsonResponse<AiPizzaSuggestion>(response.text);
+            if (suggestion) {
+                setCurrentAiSuggestion(suggestion);
+            } else {
+                 setCurrentAiSuggestion({name: "Error", description: t.errorOccurred, ingredients:[]});
+            }
+        } catch (error) {
+            console.error("Error with AI Chef:", error);
+            setCurrentAiSuggestion({name: "Error", description: t.errorOccurred, ingredients:[]});
+        } finally {
+            setIsLoadingAiChef(false);
+        }
+    };
+    
+    const handleAddSuggestedPizzaToCart = () => {
+        if (currentAiSuggestion && currentAiSuggestion.name && currentAiSuggestion.price) {
+            const suggestedPizza: MenuItem = {
+                id: `ai-${Date.now()}`, 
+                names: { he: currentAiSuggestion.name, en: currentAiSuggestion.name, fr: currentAiSuggestion.name, ru: currentAiSuggestion.name },
+                descriptions: { he: currentAiSuggestion.description, en: currentAiSuggestion.description, fr: currentAiSuggestion.description, ru: currentAiSuggestion.description },
+                price: currentAiSuggestion.price,
+                image: 'https://source.unsplash.com/600x400/?custom-pizza', 
+                isCustom: true,
+                name: currentAiSuggestion.name, 
+                description: currentAiSuggestion.description 
+            };
+            addToCart(suggestedPizza);
+            setIsAiSuggestionModalOpen(false);
+            setCurrentAiSuggestion(null);
+        }
+    };
+
+
+    const handleAnalyzeOrder = async () => {
+        if (cart.length === 0) return;
+        setIsLoadingOrderAnalysis(true);
+        setOrderAnalysisResult(null);
+
+        const cartItemsText = cart.map(cartItem => {
+             const name = cartItem.isCustom && cartItem.name ? cartItem.name : cartItem.names['en']; 
+             return `${name} (x${cartItem.quantity})`;
+        }).join(', ');
+        const menuItemsText = Object.values(menuData).flat().map(item => item.names['en']).join(', ');
+
+        const prompt = `You are a fun, witty, and enthusiastic pizza expert for "Pizza Plus".
+        A customer has the following items in their cart: ${cartItemsText}.
+        The full menu (in English for context) contains: ${menuItemsText}.
+        Your task is to:
+        1. Provide a short, fun, 1-2 sentence "critique" or "roast" of their order. Be playful, not mean.
+        2. Suggest ONE item from the menu (use its ${currentLang} name from the list if possible, or its English name if not found) that is NOT in their cart that would pair well. Give a brief reason.
+        You MUST respond with ONLY a valid JSON object.
+        The JSON object must have these exact keys: "critique" (string) and "suggestion" (string).
+        The user's language is ${currentLang}. Respond in that language.`;
+        
+        try {
+            const response = await ai.models.generateContent({
+                model: 'gemini-2.5-flash-preview-04-17',
+                contents: prompt, 
+                config: { responseMimeType: "application/json" }
+            });
+
+            const analysis = parseGeminiJsonResponse<OrderAnalysis>(response.text);
+             if (analysis) {
+                setOrderAnalysisResult(analysis);
+            } else {
+                setOrderAnalysisResult({critique: t.errorOccurred, suggestion: ""});
+            }
+        } catch (error) {
+            console.error("Error with Order Analysis:", error);
+            setOrderAnalysisResult({critique: t.errorOccurred, suggestion: ""});
+        } finally {
+            setIsLoadingOrderAnalysis(false);
+        }
+    };
+
+    const handleChatSend = async () => {
+        if (!chatInput.trim() || !geminiChatInstance.current) return;
+        const userMessage: ChatMessage = { id: `msg-${Date.now()}`, text: chatInput, sender: 'user' };
+        setChatHistory(prev => [...prev, userMessage]);
+        setChatInput('');
+        setIsLoadingChat(true);
+
+        try {
+            const response: GenerateContentResponse = await geminiChatInstance.current.sendMessage({ message: userMessage.text });
+            const geminiMessage: ChatMessage = { id: `msg-${Date.now()}-ai`, text: response.text, sender: 'gemini' };
+            setChatHistory(prev => [...prev, geminiMessage]);
+        } catch (error) {
+            console.error("Error with Chat:", error);
+            const errorMessage: ChatMessage = { id: `msg-${Date.now()}-error`, text: t.errorOccurred, sender: 'gemini' };
+            setChatHistory(prev => [...prev, errorMessage]);
+        } finally {
+            setIsLoadingChat(false);
+        }
+    };
+    
+    const handleWhatsAppOrder = () => {
+        if (cart.length === 0) {
+            alert(t.cartEmpty);
+            return;
+        }
+        const orderDetails = cart.map(item => {
+            const name = item.isCustom && item.name ? item.name : item.names[currentLang];
+            return `${name} (x${item.quantity}) - ${(item.price * item.quantity).toFixed(2)} ₪`;
+        }).join("\n");
+        const message = `${t.cartTitle}\n-------------------\n${orderDetails}\n-------------------\n${t.cartTotal} ${cartTotal.toFixed(2)} ₪`;
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    };
+
+
+    return (
+        <>
+            {/* Header Section */}
+            <header className="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 p-4 shadow-lg">
+                <div className="container mx-auto flex justify-between items-center">
+                    <div className="lang-switcher flex items-center gap-2">
+                        {(['he', 'en', 'fr', 'ru'] as LangKey[]).map(lang => (
+                            <button key={lang} data-lang={lang} className={currentLang === lang ? 'active font-bold text-white' : 'text-gray-400 hover:text-white'} onClick={() => changeLanguage(lang)}>
+                                {lang.toUpperCase()}
+                            </button>
+                        ))}
+                    </div>
+                    <a href="#" className="h-12"><img src="1000181891.jpg" alt="Pizza Plus Logo" className="h-full" /></a>
+                    <nav className="hidden md:flex items-center gap-6 text-lg">
+                        <a href="#menu-section" className="text-gray-300 hover:text-white transition">{t.navMenu}</a>
+                        <a href="#about-section" className="text-gray-300 hover:text-white transition">{t.navAbout}</a>
+                        <a href="#gallery-section" className="text-gray-300 hover:text-white transition">{t.navGallery}</a>
+                        <a href="#contact-section" className="text-gray-300 hover:text-white transition">{t.navContact}</a>
+                    </nav>
+                    <a href="#menu-section" className="btn-primary font-bold py-2 px-6 rounded-full">{t.orderButton}</a>
+                </div>
+            </header>
+
+            {/* Hero Section */}
+            <section className="hero-bg text-white text-center py-24 md:py-32">
+                <div className="container mx-auto">
+                    <h2 className="text-4xl md:text-6xl font-black mb-4">{t.heroTitle}</h2>
+                    <p className="text-xl md:text-2xl mb-8">{t.heroSubtitle}</p>
+                    <a href="#menu-section" className="btn-primary text-xl font-bold py-3 px-8 rounded-full transition">{t.heroCta}</a>
+                </div>
+            </section>
+
+            {/* Menu Section */}
+            <main id="menu-section" className="container mx-auto p-4 md:p-8">
+                <section id="ai-chef" className="ai-chef-section text-center p-8 rounded-xl mb-12">
+                    <h3 className="text-3xl font-bold mb-3">{t.aiChefTitle}</h3>
+                    <p className="text-gray-300 mb-6">{t.aiChefSubtitle}</p>
+                    <div className="max-w-xl mx-auto">
+                        <textarea 
+                            id="ai-chef-prompt-react" 
+                            className="w-full bg-gray-700 rounded-lg p-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-[#FF6347] border border-gray-600" 
+                            rows={2} 
+                            placeholder={t.aiChefPlaceholder}
+                            value={aiChefPrompt}
+                            onChange={(e) => setAiChefPrompt(e.target.value)}
+                            aria-label={t.aiChefPlaceholder}
+                        />
+                        <button 
+                            id="ai-chef-btn-react" 
+                            className="btn-primary font-bold py-3 px-8 rounded-full mt-4 w-full md:w-auto disabled:opacity-50"
+                            onClick={handleAiChefSubmit}
+                            disabled={isLoadingAiChef || !aiChefPrompt.trim()}
+                        >
+                           {isLoadingAiChef ? <div className="loader inline-block w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"></div> : <span>{t.aiChefButton}</span>}
+                        </button>
+                    </div>
+                </section>
+                <h3 className="text-3xl md:text-4xl font-bold text-center my-10 border-b-4 border-[#FF6347] inline-block pb-2">{t.menuTitle}</h3>
+                <div id="menu-items-react" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {Object.keys(menuData).map(categoryKey => (
+                        <React.Fragment key={categoryKey}>
+                            {menuData[categoryKey] && menuData[categoryKey].length > 0 && (
+                                <h4 className="text-2xl font-semibold text-white col-span-1 md:col-span-2 lg:col-span-3 mt-8 mb-4 border-b-2 border-gray-700 pb-2">
+                                    {t.categories[categoryKey as keyof typeof t.categories] || categoryKey}
+                                </h4>
+                            )}
+                            {menuData[categoryKey].map(item => (
+                                <div key={item.id} className="card bg-gray-800 rounded-lg overflow-hidden shadow-lg p-5 flex flex-col hover:shadow-xl transition-shadow duration-300">
+                                    <img 
+                                        className="w-full h-48 object-cover rounded-md mb-4" 
+                                        src={item.image} 
+                                        alt={item.names[currentLang]} 
+                                        onError={(e) => (e.currentTarget.src = 'https://source.unsplash.com/600x400/?food')} 
+                                    />
+                                    <div className="flex-grow">
+                                        <h4 className="font-bold text-xl mb-2 text-white">{item.isCustom && item.name ? item.name : item.names[currentLang]}</h4>
+                                        <p className="text-gray-400 text-base mb-4">{item.isCustom && item.description ? item.description : item.descriptions[currentLang]}</p>
+                                    </div>
+                                    <div className="flex justify-between items-center mt-4">
+                                        <span className="text-2xl font-bold text-white">{item.price} ₪</span>
+                                        <button 
+                                            className="btn-primary font-semibold py-2 px-4 rounded-full add-to-cart-btn" 
+                                            onClick={() => addToCart(item)}
+                                            aria-label={`${t.addToCart} ${item.isCustom && item.name ? item.name : item.names[currentLang]}`}
+                                        >
+                                            <i className="fas fa-cart-plus"></i> <span className="ml-2 rtl:mr-2">{t.addToCart}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </React.Fragment>
+                    ))}
+                </div>
+            </main>
+
+            {/* About Section */}
+            <section id="about-section" className="bg-gray-800/50 py-16">
+                <div className="container mx-auto text-center px-4">
+                    <h3 className="text-3xl md:text-4xl font-bold mb-4">{t.aboutTitle}</h3>
+                    <p className="max-w-3xl mx-auto text-lg text-gray-300">{t.aboutText}</p>
+                </div>
+            </section>
+
+            {/* Gallery Section */}
+            <section id="gallery-section" className="py-16">
+                <div className="container mx-auto px-4">
+                    <h3 className="text-3xl md:text-4xl font-bold text-center mb-10">{t.galleryTitle}</h3>
+                    <div className="gallery-grid">
+                        <img src="1000288415.jpg" alt="Photo of Pizza Plus restaurant front" className="rounded-lg shadow-md" />
+                        <img src="1000288419.jpg" alt="Photo of Pizza Plus counter" className="rounded-lg shadow-md" />
+                        <img src="1000288421.jpg" alt="Another photo of Pizza Plus counter" className="rounded-lg shadow-md" />
+                        <img src="1000184719.jpg" alt="Pizza Plus toppings bar" className="rounded-lg shadow-md" />
+                    </div>
+                </div>
+            </section>
+
+            {/* Contact and Footer */}
+            <footer id="contact-section" className="bg-gray-900 text-center py-10">
+                <div className="container mx-auto px-4">
+                    <img src="1000181891.jpg" alt="Pizza Plus Logo" className="h-16 mx-auto mb-4" />
+                    <p className="text-lg mb-2 text-gray-300">{t.address}</p>
+                    <p className="text-lg mb-4 text-gray-300"><strong>{t.phoneOrder}</strong> <a href="tel:026363108" className="text-[#FF6347] hover:underline">02-636-3108</a></p>
+                    <p className="text-gray-500 text-sm">&copy; {new Date().getFullYear()} Pizza Plus. All rights reserved.</p>
+                </div>
+            </footer>
+            
+            {/* Cart Sidebar */}
+            <div className={`cart-sidebar fixed top-0 ${currentLang === 'he' ? 'left-0' : 'right-0'} h-full bg-gray-800 shadow-xl p-6 transition-transform duration-300 ease-in-out z-50 w-full max-w-md ${isCartOpen ? (currentLang === 'he' ? 'translate-x-0' : 'translate-x-0') : (currentLang === 'he' ? 'translate-x-[-100%]' : 'translate-x-full')}`}>
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-2xl font-bold text-white">{t.cartTitle}</h3>
+                    <button onClick={() => setIsCartOpen(false)} className="text-gray-400 hover:text-white text-2xl" aria-label="Close cart">&times;</button>
+                </div>
+                {cart.length === 0 ? (
+                    <p className="text-gray-400">{t.cartEmpty}</p>
+                ) : (
+                    <>
+                        <div className="space-y-4 mb-6 max-h-[calc(100vh-280px)] overflow-y-auto">
+                            {cart.map(item => (
+                                <div key={item.id} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                                    <div>
+                                        <h4 className="font-semibold text-white">{item.isCustom && item.name ? item.name : item.names[currentLang]}</h4>
+                                        <p className="text-sm text-gray-400">{item.price} ₪ x {item.quantity}</p>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-lg font-semibold text-white">{(item.price * item.quantity).toFixed(2)} ₪</span>
+                                        <button onClick={() => removeFromCart(item.id)} className="text-red-400 hover:text-red-300 px-2 py-1 text-xs" aria-label={`Remove ${item.isCustom && item.name ? item.name : item.names[currentLang]}`}>&times;</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        {orderAnalysisResult && (
+                            <div className="mb-4 p-3 bg-gray-700/50 rounded-lg">
+                                <h4 className="font-semibold text-[#FF8C00] mb-1">{t.analysisCritiqueTitle}</h4>
+                                <p className="text-sm text-gray-300 mb-2">{orderAnalysisResult.critique}</p>
+                                <h4 className="font-semibold text-green-400 mb-1">{t.analysisSuggestionTitle}</h4>
+                                <p className="text-sm text-gray-300">{orderAnalysisResult.suggestion}</p>
+                            </div>
+                        )}
+                        <button 
+                            onClick={handleAnalyzeOrder} 
+                            className="w-full btn-secondary font-semibold py-2 px-4 rounded-full mb-3 disabled:opacity-50"
+                            disabled={isLoadingOrderAnalysis || cart.length === 0}
+                        >
+                            {isLoadingOrderAnalysis ? <div className="loader inline-block w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"></div> : t.analyzeOrderBtn}
+                        </button>
+                        <div className="border-t border-gray-700 pt-4">
+                            <div className="flex justify-between items-center text-xl font-bold text-white mb-4">
+                                <span>{t.cartTotal}</span>
+                                <span>{cartTotal.toFixed(2)} ₪</span>
+                            </div>
+                            <button onClick={handleWhatsAppOrder} className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-full mb-2">{t.orderWhatsapp}</button>
+                            <button onClick={() => setIsBitModalOpen(true)} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-full">{t.payBit}</button>
+                        </div>
+                    </>
+                )}
+            </div>
+            {isCartOpen && <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setIsCartOpen(false)}></div>}
+
+            {/* Cart Button */}
+            <button 
+                onClick={() => setIsCartOpen(true)} 
+                className="fixed bottom-5 right-5 bg-[#FF6347] text-white p-4 rounded-full shadow-lg hover:bg-red-600 transition z-30"
+                aria-label="Open cart"
+            >
+                <i className="fas fa-shopping-cart text-2xl"></i>
+                {cartCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-700 text-xs text-white rounded-full px-2 py-1">{cartCount}</span>
+                )}
+            </button>
+
+            {/* Chat Widget */}
+            <div className={`chat-widget fixed bottom-20 ${currentLang === 'he' ? 'left-5' : 'right-5'} z-30 transition-all duration-300 ease-in-out ${isChatOpen ? 'w-[350px] h-[500px]' : 'w-16 h-16'}`}>
+                {!isChatOpen && (
+                    <button 
+                        onClick={() => setIsChatOpen(true)} 
+                        className="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition w-16 h-16 flex items-center justify-center"
+                        aria-label="Open chat assistant"
+                    >
+                        <i className="fas fa-comment-dots text-2xl"></i>
+                    </button>
+                )}
+                {isChatOpen && (
+                     <div className="bg-gray-800 shadow-xl rounded-lg h-full flex flex-col">
+                        <header className="bg-gray-700 p-3 flex justify-between items-center rounded-t-lg">
+                            <h3 className="text-lg font-semibold text-white">{t.chatTitle}</h3>
+                            <button onClick={() => setIsChatOpen(false)} className="text-gray-400 hover:text-white" aria-label="Close chat">&times;</button>
+                        </header>
+                        <div className="flex-grow p-3 space-y-3 overflow-y-auto" ref={chatMessagesEndRef}>
+                            {chatHistory.map((msg) => (
+                                <div key={msg.id} className={`flex ${msg.sender === 'user' ? (currentLang === 'he' ? 'justify-start' : 'justify-end') : (currentLang === 'he' ? 'justify-end' : 'justify-start')}`}>
+                                    <div className={`p-2 rounded-lg max-w-[80%] text-sm ${msg.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-600 text-gray-200'}`}>
+                                        {msg.text.split('\n').map((line, idx) => <p key={idx}>{line}</p>)}
+                                    </div>
+                                </div>
+                            ))}
+                            {isLoadingChat && (
+                                <div className={`flex ${currentLang === 'he' ? 'justify-end' : 'justify-start'}`}>
+                                    <div className="p-2 rounded-lg bg-gray-600 text-gray-200">
+                                        <div className="loader-dots"><span>.</span><span>.</span><span>.</span></div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        <footer className="p-3 border-t border-gray-700">
+                            <div className="flex gap-2">
+                                <input 
+                                    type="text" 
+                                    className="flex-grow bg-gray-700 rounded-lg p-2 text-white placeholder-gray-400 focus:ring-1 focus:ring-blue-500 border border-gray-600" 
+                                    placeholder={t.chatPlaceholder} 
+                                    value={chatInput} 
+                                    onChange={(e) => setChatInput(e.target.value)} 
+                                    onKeyPress={(e) => e.key === 'Enter' && !isLoadingChat && handleChatSend()}
+                                    aria-label={t.chatPlaceholder}
+                                />
+                                <button 
+                                    onClick={handleChatSend} 
+                                    className="btn-primary px-4 py-2 rounded-lg disabled:opacity-50"
+                                    disabled={isLoadingChat || !chatInput.trim()}
+                                >
+                                    <i className="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </footer>
+                    </div>
+                )}
+            </div>
+
+            {/* Bit Payment Modal */}
+            {isBitModalOpen && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+                    <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-md w-full text-center">
+                        <h3 className="text-2xl font-bold text-white mb-4">{t.bitTitle}</h3>
+                        <p className="text-gray-300 mb-6">{t.bitInstruction}</p>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Bit_logo.svg/1200px-Bit_logo.svg.png" alt="Bit Logo" className="h-16 mx-auto mb-4" />
+                        <p className="text-xs text-gray-500 mb-6">{t.bitDisclaimer}</p>
+                        <button onClick={() => setIsBitModalOpen(false)} className="btn-primary py-2 px-6 rounded-full w-full">סגור</button>
+                    </div>
+                </div>
+            )}
+
+            {/* AI Chef Suggestion Modal */}
+            {isAiSuggestionModalOpen && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+                    <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-lg w-full">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-2xl font-bold text-white">{t.aiChefModalTitle}</h3>
+                            <button onClick={() => setIsAiSuggestionModalOpen(false)} className="text-gray-400 hover:text-white text-2xl" aria-label="Close suggestion">&times;</button>
+                        </div>
+                        {isLoadingAiChef && (
+                            <div className="text-center py-8">
+                                <div className="loader inline-block w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-3"></div>
+                                <p className="text-gray-300">{t.aiChefThinking}</p>
+                            </div>
+                        )}
+                        {!isLoadingAiChef && currentAiSuggestion && (
+                             currentAiSuggestion.name === "Error" ? (
+                                 <p className="text-red-400 py-8 text-center">{currentAiSuggestion.description}</p>
+                             ) : (
+                                <>
+                                    <h4 className="text-2xl font-semibold text-[#FF8C00] mb-2">{currentAiSuggestion.name}</h4>
+                                    <p className="text-gray-300 mb-3">{currentAiSuggestion.description}</p>
+                                    <p className="text-gray-400 mb-1"><strong>מרכיבים:</strong> {currentAiSuggestion.ingredients.join(', ')}</p>
+                                    <p className="text-xl font-bold text-white mb-6">{currentAiSuggestion.price} ₪</p>
+                                    <button 
+                                        onClick={handleAddSuggestedPizzaToCart} 
+                                        className="btn-primary w-full py-3 rounded-full font-bold"
+                                    >
+                                        {t.addToCart}
+                                    </button>
+                                </>
+                             )
+                        )}
+                         {!isLoadingAiChef && !currentAiSuggestion && (
+                            <p className="text-gray-400 py-8 text-center">{t.errorOccurred}</p>
+                        )}
+                    </div>
+                </div>
+            )}
+        </>
+    );
+};
+
+const rootElement = document.getElementById('root');
+if (rootElement) {
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(<React.StrictMode><App /></React.StrictMode>);
+}

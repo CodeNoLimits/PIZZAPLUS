@@ -1,0 +1,155 @@
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { ChatMessage as ChatMessageType, Translations } from '../types';
+import { PRIMARY_COLOR, GEMINI_API_KEY_ERROR_MESSAGE } from '../constants';
+import Spinner from './Spinner';
+
+interface ChatWidgetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  t: (key: string) => string;
+  apiKey?: string;
+  initialMessages: ChatMessageType[];
+  onMessagesChange: (messages: ChatMessageType[]) => void;
+}
+
+const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, onClose, t, apiKey, initialMessages, onMessagesChange }) => {
+  const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  useEffect(scrollToBottom, [initialMessages, scrollToBottom]);
+  
+  useEffect(() => {
+    if (!apiKey && initialMessages.length <= 1) { 
+       const errorMsg = {
+        id: Date.now().toString() + '-apikey-error',
+        text: GEMINI_API_KEY_ERROR_MESSAGE,
+        sender: 'gemini' as const,
+        timestamp: new Date()
+      };
+      onMessagesChange([...initialMessages, errorMsg]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiKey]); 
+
+
+  const handleSendMessage = async () => {
+    if (inputValue.trim() === '' || isLoading || !apiKey) return;
+
+    const newUserMessage: ChatMessageType = {
+      id: Date.now().toString(),
+      text: inputValue,
+      sender: 'user',
+      timestamp: new Date()
+    };
+    onMessagesChange([...initialMessages, newUserMessage]);
+    setInputValue('');
+    setIsLoading(true);
+
+    try {
+      const { sendMessageToGemini } = await import('../services/geminiService');
+      const currentLang = document.documentElement.lang;
+      const historyForGemini = initialMessages.map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.text }]
+      }));
+      
+      const geminiResponseText = await sendMessageToGemini(inputValue, historyForGemini, currentLang);
+      
+      const newGeminiMessage: ChatMessageType = {
+        id: (Date.now() + 1).toString(),
+        text: geminiResponseText,
+        sender: 'gemini',
+        timestamp: new Date()
+      };
+      onMessagesChange([...initialMessages, newUserMessage, newGeminiMessage]);
+
+    } catch (error) {
+      console.error("Error sending message to Gemini:", error);
+      const errorMessage: ChatMessageType = {
+        id: (Date.now() + 1).toString(),
+        text: t('errorOccurred'),
+        sender: 'gemini',
+        timestamp: new Date()
+      };
+      onMessagesChange([...initialMessages, newUserMessage, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed bottom-20 right-5 rtl:left-5 rtl:right-auto w-[350px] max-w-[90vw] h-[500px] bg-neutral-800 rounded-xl shadow-2xl flex flex-col border border-neutral-700 z-[1001] transition-all duration-300 ease-in-out">
+      {/* Header */}
+      <div className="flex justify-between items-center p-4 border-b border-neutral-700 bg-neutral-900"> {/* Changed background */}
+        <h3 className="text-lg font-semibold text-white">{t('chatWithUs')}</h3>
+        <button onClick={onClose} className="text-white hover:text-neutral-200 text-xl">
+          <i className="fas fa-times"></i>
+        </button>
+      </div>
+
+      {/* Messages */}
+      <div id="chat-messages" className="flex-grow p-4 overflow-y-auto space-y-3">
+        {initialMessages.map((msg) => (
+          <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div
+              className={`message max-w-[85%] py-2 px-4 rounded-2xl text-sm md:text-base shadow-sm
+                ${msg.sender === 'user' 
+                  ? 'text-white ms-auto' // Removed bg-[${PRIMARY_COLOR}] here to apply via style prop
+                  : 'bg-neutral-700 text-neutral-200 me-auto'
+                }`}
+              style={msg.sender === 'user' ? { backgroundColor: PRIMARY_COLOR } : {}}
+            >
+              {/* Using whitespace-pre-wrap to respect newlines from Gemini */}
+              <div className="whitespace-pre-wrap">{msg.text}</div>
+               <div className={`text-xs mt-1 ${msg.sender === 'user' ? 'text-neutral-200/70 text-end' : 'text-neutral-400/70 text-start'}`}>
+                {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </div>
+            </div>
+          </div>
+        ))}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-neutral-700 text-neutral-200 py-2 px-4 rounded-2xl me-auto shadow-sm"> {/* Matched styling */}
+              <Spinner size="sm" />
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input */}
+      <div className="p-4 border-t border-neutral-700">
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            placeholder={t('chatPlaceholder')}
+            className="flex-grow bg-neutral-700 border-neutral-600 text-white rounded-lg p-3 focus:ring-1 focus:ring-[${PRIMARY_COLOR}] focus:border-[${PRIMARY_COLOR}] transition-shadow shadow-sm placeholder-neutral-400"
+            disabled={isLoading || !apiKey}
+          />
+          <button 
+            onClick={handleSendMessage} 
+            disabled={isLoading || !apiKey}
+            className="p-3 rounded-lg transition-colors duration-200 text-white text-xl w-12 h-12 flex items-center justify-center"
+            style={{ backgroundColor: PRIMARY_COLOR }}
+            onMouseOver={e => e.currentTarget.style.backgroundColor = '#E5533D'}
+            onMouseOut={e => e.currentTarget.style.backgroundColor = PRIMARY_COLOR}
+          >
+            {isLoading ? <Spinner size="sm" /> : <i className="fas fa-paper-plane"></i>}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChatWidget;
