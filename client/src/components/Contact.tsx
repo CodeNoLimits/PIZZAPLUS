@@ -3,6 +3,7 @@ import { Translations } from '../types';
 import { MapPin, Phone, Clock, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import mapImage from '@assets/image_1749511916153.png';
 
 interface ContactProps {
   translations: Translations;
@@ -98,20 +99,14 @@ const Contact: React.FC<ContactProps> = ({ translations }) => {
             </div>
           </div>
 
-          {/* Interactive Google Map */}
+          {/* Static Map */}
           <div className="relative">
             <Card className="bg-gray-700 h-96 overflow-hidden">
               <CardContent className="p-0 h-full">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d851.0796476775449!2d35.2276262!3d31.7153458!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1502d743c1234567%3A0x89abcdef12345678!2sIsh%20Matzliach%20St%202%2C%20Har%20Homa%2C%20Jerusalem!5e0!3m2!1sen!2sil!4v1674567890123!5m2!1sen!2sil&q=Ish+Matzliach+2+Har+Homa+Jerusalem"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Pizza Plus Restaurant Location"
-                  className="rounded-lg"
+                <img
+                  src={mapImage}
+                  alt="Pizza Plus Restaurant Location - Ha-Baba Sali Street Area"
+                  className="w-full h-full object-cover rounded-lg"
                 />
               </CardContent>
             </Card>
