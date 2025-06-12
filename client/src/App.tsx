@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Language, MenuItem, CartItem, Translations } from './types';
 import { TRANSLATIONS } from './constants';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import MenuSection from './components/MenuSection';
-import Gallery from './components/Gallery';
-import About from './components/About';
-import Contact from './components/Contact';
-import Cart from './components/Cart';
-import ChatWidget from './components/ChatWidget';
-import OrderDialog from './components/OrderDialog';
 import { MessageCircle, Phone } from 'lucide-react';
+
+// Lazy load components that are not immediately visible
+const MenuSection = lazy(() => import('./components/MenuSection'));
+const Gallery = lazy(() => import('./components/Gallery'));
+const About = lazy(() => import('./components/About'));
+const Contact = lazy(() => import('./components/Contact'));
+const Cart = lazy(() => import('./components/Cart'));
+const ChatWidget = lazy(() => import('./components/ChatWidget'));
+const OrderDialog = lazy(() => import('./components/OrderDialog'));
+
+// Import TikTok tracking directly (small utility)
 import { trackViewContent } from './utils/tiktok';
 
 function App() {
