@@ -4,6 +4,7 @@ import { MapPin, Phone, Clock, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import mapImage from '@assets/image_1749511916153.png';
+import { trackContact } from '../utils/tiktok';
 
 interface ContactProps {
   translations: Translations;
@@ -78,22 +79,24 @@ const Contact: React.FC<ContactProps> = ({ translations }) => {
               <h4 className="text-xl font-bold">הזמינו עכשיו</h4>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
-                  asChild
                   className="bg-green-600 hover:bg-green-700 text-white"
+                  onClick={() => {
+                    trackContact('whatsapp');
+                    window.open(`https://wa.me/972${translations.whatsappOrders.replace(/[^0-9]/g, '').substring(1)}`, '_blank');
+                  }}
                 >
-                  <a href={`https://wa.me/972${translations.whatsappOrders.replace(/[^0-9]/g, '').substring(1)}`}>
-                    <MessageCircle className="w-4 h-4 mr-2" />
-                    הזמנה בWhatsApp
-                  </a>
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  הזמנה בWhatsApp
                 </Button>
                 <Button 
-                  asChild
                   className="bg-primary hover:bg-red-600 text-white"
+                  onClick={() => {
+                    trackContact('phone');
+                    window.location.href = `tel:${translations.phone}`;
+                  }}
                 >
-                  <a href={`tel:${translations.phone}`}>
-                    <Phone className="w-4 h-4 mr-2" />
-                    הזמנה טלפונית
-                  </a>
+                  <Phone className="w-4 h-4 mr-2" />
+                  הזמנה טלפונית
                 </Button>
               </div>
             </div>

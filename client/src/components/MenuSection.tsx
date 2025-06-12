@@ -45,6 +45,18 @@ const MenuSection: React.FC<MenuSectionProps> = ({ translations, currentLanguage
 
   const handleAddToCart = (item: MenuItem) => {
     const toppings = selectedToppings[item.id] || [];
+    
+    // Calculate total price including toppings
+    const toppingPrice = toppings.length * (item.toppingPrice || 0);
+    const itemWithToppings = {
+      ...item,
+      totalPrice: item.price + toppingPrice,
+      selectedToppings: toppings
+    };
+    
+    // Track TikTok add to cart event
+    trackAddToCart(itemWithToppings, 1);
+    
     onAddToCart(item, toppings);
     // Clear selected toppings after adding to cart
     setSelectedToppings(prev => ({ ...prev, [item.id]: [] }));

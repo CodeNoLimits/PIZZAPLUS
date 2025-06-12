@@ -11,6 +11,7 @@ import Cart from './components/Cart';
 import ChatWidget from './components/ChatWidget';
 import OrderDialog from './components/OrderDialog';
 import { MessageCircle, Phone } from 'lucide-react';
+import { trackViewContent } from './utils/tiktok';
 
 function App() {
   const [currentLanguage, setCurrentLanguage] = useState<Language>('he');
@@ -25,6 +26,11 @@ function App() {
     document.documentElement.dir = currentLanguage === 'he' ? 'rtl' : 'ltr';
     document.documentElement.lang = currentLanguage;
   }, [currentLanguage]);
+
+  useEffect(() => {
+    // Track initial page view
+    trackViewContent('website', 'pizza_plus_homepage');
+  }, []);
 
   const handleLanguageChange = (lang: Language) => {
     setCurrentLanguage(lang);
