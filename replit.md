@@ -125,6 +125,9 @@ Session Store → API Call → Restaurant Knowledge → Multilingual Reply
 ```
 Changelog:
 - June 15, 2025. Initial setup
+- June 15, 2025. Added promotional banner for weekly deal in French, Hebrew, English
+- June 15, 2025. Updated TikTok Pixel ID to D179S7RC77UA68QT5U1G
+- June 15, 2025. Fixed deployment configuration for external access (0.0.0.0 binding)
 ```
 
 ## User Preferences
