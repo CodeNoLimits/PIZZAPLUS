@@ -76,6 +76,10 @@ export const TRANSLATIONS: Record<string, Translations> = {
     whatsappOrders: '054-6083500',
     hours: 'א׳-ה׳: 11:00-23:00 | ו׳: 11:00-15:00 | מוצ״ש: 20:00-23:00',
     
+    // Promotion
+    promoTitle: 'מבצע השבוע!',
+    promoText: 'פיצה שנייה במחצית מחיר (איסוף עצמי)',
+    
     // Common
     close: 'סגור',
     currency: '₪',
@@ -130,6 +134,10 @@ export const TRANSLATIONS: Record<string, Translations> = {
     phone: '02-9921201',
     whatsappOrders: '054-6083500',
     hours: 'Sun-Thu: 11:00-23:00 | Fri: 11:00-15:00 | Sat Night: 20:00-23:00',
+    
+    // Promotion
+    promoTitle: 'Deal of the Week!',
+    promoText: 'Second Pizza Half Price (Takeaway)',
     
     // Common
     close: 'Close',
@@ -186,6 +194,10 @@ export const TRANSLATIONS: Record<string, Translations> = {
     whatsappOrders: '054-6083500',
     hours: 'Dim-Jeu: 11h00-23h00 | Ven: 11h00-15h00 | Sam soir: 20h00-23h00',
     
+    // Promotion
+    promoTitle: 'Offre de la Semaine!',
+    promoText: 'Deuxième Pizza Moitié Prix (À Emporter)',
+    
     // Common
     close: 'Fermer',
     currency: '₪',
@@ -240,6 +252,10 @@ export const TRANSLATIONS: Record<string, Translations> = {
     phone: '02-9921201',
     whatsappOrders: '054-6083500',
     hours: 'Вс-Чт: 11:00-23:00 | Пт: 11:00-15:00 | Сб вечер: 20:00-23:00',
+    
+    // Promotion
+    promoTitle: 'Акция недели!',
+    promoText: 'Вторая пицца за полцены (самовывоз)',
     
     // Common
     close: 'Закрыть',

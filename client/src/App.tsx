@@ -3,6 +3,7 @@ import { Language, MenuItem, CartItem, Translations } from './types';
 import { TRANSLATIONS } from './constants';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import PromoBanner from './components/PromoBanner';
 import { MessageCircle, Phone } from 'lucide-react';
 
 // Lazy load components that are not immediately visible
@@ -97,6 +98,12 @@ function App() {
 
   return (
     <div className={`font-heebo ${currentLanguage === 'he' ? 'rtl' : 'ltr'} bg-gray-50 min-h-screen`}>
+      {/* Promotional Banner - Top Priority Placement */}
+      <PromoBanner 
+        translations={translations} 
+        currentLanguage={currentLanguage} 
+      />
+      
       <Header
         currentLanguage={currentLanguage}
         onLanguageChange={handleLanguageChange}

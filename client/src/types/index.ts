@@ -84,6 +84,10 @@ export interface Translations {
   whatsappOrders: string;
   hours: string;
   
+  // Promotion
+  promoTitle: string;
+  promoText: string;
+  
   // Common
   close: string;
   currency: string;
