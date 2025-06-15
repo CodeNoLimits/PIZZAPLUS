@@ -1,0 +1,150 @@
+
+Business Help Center
+Home
+What's new
+English
+Go to Ads Manager
+U
+Getting started
+Ad creation
+Ad objectives
+Ad formats
+Ad optimization
+Measurement
+Payment and billing
+Policies and security
+Enter a topic
+Web measurement
+Web Data Connections
+
+Web Events & Parameters
+
+TikTok Web Measurement Tools
+
+About TikTok Pixel
+How to Set Up and Verify TikTok Web Data Connection
+Enhance Data Postback with the TikTok Pixel
+How to Enable Auto Event Setup
+Troubleshoot with Pixel Helper
+How to troubleshoot Pixel activations not showing in TikTok Ads Manager
+About using cookies with TikTok Pixel
+About Web Modeled Conversions
+About TikTok Pixel for Ecwid
+About Single Page Application Pageview Measurement for TikTok Pixel
+How to troubleshoot Pixel visibility in TikTok Ads Manager
+About Events API
+How to get started with Events API
+About Events API Payload Converter
+About the TikTok Event Builder
+How to Set Up Events and Parameters with Events Builder
+Partner Integrations for Web Events
+How to set up TikTok Pixel with Google Tag Manager in TikTok Events Manager
+How to set up Events API for server-side tagging in Google Tag Manager
+About Pixel sharing in Business Center
+How to set up pixel signal postback
+How to set up a secure data connection with TikTok through SignalSight
+How to set up a TikTok conversions destination with Twilio Segment
+How to set up a secure data connection with TikTok through Tealium
+How to set up a secure data connection with TikTok through DataHash
+How to set up a TikTok conversions destination with Adobe
+How to set up a TikTok conversions destination with Tealium
+How to set up a secure data connection with TikTok through mParticle
+How to set up a secure data connection with TikTok through Hightouch
+How to set up a secure data connection with TikTok through Blotout
+How to set up a secure data connection with TikTok through Grivy
+How to set up a secure data connection with TikTok through Anytrack
+How to set up a secure data connection with TikTok through Gamesight
+How to set up a secure data connection with TikTok through Elevar
+How to set up a pixel implementation with TikTok through TicketMaster
+TikTok Events Manager
+
+Event Matching
+
+TikTok Post Purchase Surveys
+
+Measurement /Web measurement /TikTok Web Measurement Tools
+How to Set Up and Verify TikTok Web Data Connection
+Last updated: April 2025
+TikTok for Business offers tools that allow businesses to share marketing data with TikTok for measurement and ad performance. These data connections can be setup for web via a TikTok Pixel or Events API integration.
+
+
+Both options are available via selected third party partners or through a manual setup.
+
+TikTok Pixel is a piece of code that you can place on your website that allows you to share website events with TikTok. Learn more about TikTok Pixel.
+
+TikTok Events API provides advertisers with a reliable connection between TikTok and advertiser's marketing data, across web, app, and offline (eg. Store, CRM) channels with the ability to customize the information they share with TikTok. Learn more about Events API
+
+
+How to set up TikTok Data Connection
+To set up TikTok Pixel:
+
+Log in to TikTok Ads Manager and go to Tools.
+
+Click Event to enter TikTok Events Manager
+
+Click Connect Data Source
+
+Select Web
+
+Input your URL
+
+Select Partner Integration or Manual Setup as your connection method
+
+Learn more about TikTok Events Manager
+
+Note: If you select Partner Setup, you will be directed to a page where you can select different supported TikTok partners for your integration, like Shopify and Google Tag Manager.
+
+
+For Partner Integrations
+Select your preferred third party partner for your data connection
+
+Create and name your pixel. All the events sent to this Pixel Code will show up under this Pixel. We recommend creating a pixel name that corresponds to your website or domain name. The maximum character length is 128 characters, including spaces
+
+Follow steps outlined for the partner within the setup flow
+
+
+For Manual Setup
+Select your preferred manual connection method*
+
+Create and name your pixel. All the events sent to this Pixel Code will show up under this Pixel. We recommend creating a pixel name that corresponds to your website or domain name. The maximum character length is 128 characters, including spaces
+
+Install the base code onto your website
+
+Manage configurations and desired settings
+
+Follow steps outlined within the setup guide to configure your events. Learn more about Event Builder
+
+
+Note: We recommend setting up both the TikTok Pixel and Events API together to maximize measurement and performance of your campaigns
+
+
+We recommend setting up all events throughout the user journey to maximize measurement and optimization opportunities for your campaign
+
+
+Verify your set up
+There are three ways to verify pixel and events set up:
+
+Download TikTok Pixel Helper in the Chrome Store and check for any errors. Learn more about Pixel Helper on the TikTok Pixel Helper page.
+
+Test pixel events with the Test Events feature in Events manager. Learn more about Test Events.
+
+Use the Diagnostics tab in Events Manager to resolve any issues presented. Learn more about Web Diagnostics.
+
+
+Related Articles
+About TikTok Pixel
+Enhance Data Postback with the TikTok Pixel
+About Events API
+Resources
+TikTok Shop Academy
+TikTok Help Center
+TikTok Academy
+TikTok for Business
+Creative Center
+
+Terms & Policies
+Privacy
+©2025 TikTok For Business
+DSers
+DSers
+An DSers account is needed in order to use our extension. Log in or create your free account now.
