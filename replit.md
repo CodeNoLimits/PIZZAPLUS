@@ -135,6 +135,8 @@ Changelog:
 - June 15, 2025. Fixed deployment configuration for external access (0.0.0.0 binding)
 - June 15, 2025. Implemented comprehensive TikTok event tracking system with advanced analytics
 - June 15, 2025. Added SHA-256 PII hashing, event deduplication, and customer journey tracking
+- June 15, 2025. Implemented dual TikTok tracking: Pixel + Events API with access token
+- June 15, 2025. Added server-side tracking endpoints for reliable data collection
 ```
 
 ## User Preferences
