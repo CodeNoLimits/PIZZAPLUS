@@ -16,7 +16,7 @@ const ChatWidget = lazy(() => import('./components/ChatWidget'));
 const OrderDialog = lazy(() => import('./components/OrderDialog'));
 
 // Import TikTok tracking directly (small utility)
-import { trackViewContent } from './utils/tiktok';
+import { trackPageView } from './utils/tiktok';
 
 function App() {
   const [currentLanguage, setCurrentLanguage] = useState<Language>('he');
@@ -34,7 +34,7 @@ function App() {
 
   useEffect(() => {
     // Track initial page view
-    trackViewContent('website', 'pizza_plus_homepage');
+    trackPageView('website', 'pizza_plus_homepage');
   }, []);
 
   const handleLanguageChange = (lang: Language) => {
