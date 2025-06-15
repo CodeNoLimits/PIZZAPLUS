@@ -1,4 +1,5 @@
 import { Translations, Language } from '../types';
+import { trackPromoClick } from '../utils/tiktok';
 
 interface PromoBannerProps {
   translations: Translations;
@@ -7,7 +8,10 @@ interface PromoBannerProps {
 
 export default function PromoBanner({ translations, currentLanguage }: PromoBannerProps) {
   return (
-    <div className="bg-gradient-to-r from-red-600 to-orange-500 text-white py-3 px-4 shadow-lg">
+    <div 
+      className="bg-gradient-to-r from-red-600 to-orange-500 text-white py-3 px-4 shadow-lg cursor-pointer hover:from-red-700 hover:to-orange-600 transition-all"
+      onClick={trackPromoClick}
+    >
       <div className="container mx-auto max-w-6xl">
         <div className="text-center">
           <div className="inline-flex items-center justify-center space-x-3">

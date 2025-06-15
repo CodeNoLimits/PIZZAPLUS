@@ -41,6 +41,7 @@ const Contact: React.FC<ContactProps> = ({ translations }) => {
                     <a 
                       href={`tel:${translations.phone}`} 
                       className="text-gray-300 hover:text-white transition-colors"
+                      onClick={() => trackContact('phone')}
                     >
                       {translations.phone}
                     </a>
@@ -54,6 +55,7 @@ const Contact: React.FC<ContactProps> = ({ translations }) => {
                     <a 
                       href={`https://wa.me/972${translations.whatsappOrders.replace(/[^0-9]/g, '').substring(1)}`}
                       className="text-gray-300 hover:text-white transition-colors"
+                      onClick={() => trackContact('whatsapp')}
                     >
                       {translations.whatsappOrders}
                     </a>

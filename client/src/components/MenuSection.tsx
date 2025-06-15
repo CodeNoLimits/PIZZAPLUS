@@ -107,7 +107,8 @@ const MenuSection: React.FC<MenuSectionProps> = ({ translations, currentLanguage
         {/* Menu Items Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredItems.map(item => (
-            <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-all transform hover:-translate-y-1">
+            <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-all transform hover:-translate-y-1"
+                  onClick={() => trackViewContent(item)}>
               {/* Item Image */}
               <div className="relative h-48 bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center overflow-hidden">
                 {item.image ? (

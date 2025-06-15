@@ -131,7 +131,26 @@ export const trackPageView = (contentType: string, contentName: string) => {
 
 // Track contact interactions
 export const trackContact = (method: string) => {
+  const eventId = generateEventId();
   trackTikTokEvent('Contact', {
     contact_method: method
-  });
+  }, eventId);
+};
+
+// Track promotional banner interactions
+export const trackPromoClick = () => {
+  const eventId = generateEventId();
+  trackTikTokEvent('ViewContent', {
+    content_type: 'promotion',
+    content_name: 'second_pizza_half_price'
+  }, eventId);
+};
+
+// Track language change events
+export const trackLanguageChange = (newLanguage: string) => {
+  const eventId = generateEventId();
+  trackTikTokEvent('ViewContent', {
+    content_type: 'language_change',
+    content_name: newLanguage
+  }, eventId);
 };
