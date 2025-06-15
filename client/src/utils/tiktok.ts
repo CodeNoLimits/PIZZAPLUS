@@ -20,6 +20,25 @@ const hashData = async (data: string): Promise<string> => {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 };
 
+// Send event to server-side Events API for dual tracking
+const sendServerEvent = async (endpoint: string, data: any) => {
+  try {
+    const response = await fetch(`/api/tiktok/${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    
+    if (!response.ok) {
+      console.warn('Server-side tracking failed:', response.statusText);
+    }
+  } catch (error) {
+    console.warn('Server-side tracking error:', error);
+  }
+};
+
 export const trackTikTokEvent = (eventName: string, parameters?: any, eventId?: string) => {
   if (typeof window !== 'undefined' && window.ttq) {
     try {
@@ -59,6 +78,8 @@ export const trackUserIdentify = async (email?: string, phone?: string, userId?:
 // Track when user views menu item content
 export const trackViewContent = (item: any) => {
   const eventId = generateEventId();
+  
+  // Client-side pixel tracking
   trackTikTokEvent('ViewContent', {
     contents: [{
       content_id: item.id,
@@ -68,11 +89,20 @@ export const trackViewContent = (item: any) => {
     value: item.price / 100,
     currency: 'ILS'
   }, eventId);
+  
+  // Server-side Events API tracking
+  sendServerEvent('view-content', {
+    contentId: item.id,
+    contentName: item.nameEn || item.nameHe,
+    value: item.price / 100
+  });
 };
 
 // Track when user adds item to cart
 export const trackAddToCart = (item: any, quantity: number = 1) => {
   const eventId = generateEventId();
+  
+  // Client-side pixel tracking
   trackTikTokEvent('AddToCart', {
     contents: [{
       content_id: item.id,
@@ -82,11 +112,20 @@ export const trackAddToCart = (item: any, quantity: number = 1) => {
     value: (item.totalPrice * quantity) / 100,
     currency: 'ILS'
   }, eventId);
+  
+  // Server-side Events API tracking
+  sendServerEvent('add-to-cart', {
+    contentId: item.id,
+    contentName: item.nameEn || item.nameHe,
+    value: (item.totalPrice * quantity) / 100
+  });
 };
 
 // Track when user initiates checkout
 export const trackInitiateCheckout = (cartItems: any[], total: number) => {
   const eventId = generateEventId();
+  
+  // Client-side pixel tracking
   trackTikTokEvent('InitiateCheckout', {
     contents: cartItems.map(item => ({
       content_id: item.id,
@@ -96,11 +135,18 @@ export const trackInitiateCheckout = (cartItems: any[], total: number) => {
     value: total / 100,
     currency: 'ILS'
   }, eventId);
+  
+  // Server-side Events API tracking
+  sendServerEvent('initiate-checkout', {
+    totalValue: total / 100
+  });
 };
 
 // Track when user places order via WhatsApp
 export const trackPlaceOrder = (cartItems: any[], total: number, orderMethod: string = 'whatsapp') => {
   const eventId = generateEventId();
+  
+  // Client-side pixel tracking
   trackTikTokEvent('PlaceAnOrder', {
     contents: cartItems.map(item => ({
       content_id: item.id,
@@ -110,14 +156,26 @@ export const trackPlaceOrder = (cartItems: any[], total: number, orderMethod: st
     value: total / 100,
     currency: 'ILS'
   }, eventId);
+  
+  // Server-side Events API tracking
+  sendServerEvent('place-order', {
+    totalValue: total / 100
+  });
 };
 
 // Track search actions
 export const trackSearch = (searchTerm: string) => {
   const eventId = generateEventId();
+  
+  // Client-side pixel tracking
   trackTikTokEvent('Search', {
     search_string: searchTerm
   }, eventId);
+  
+  // Server-side Events API tracking
+  sendServerEvent('search', {
+    searchTerm: searchTerm
+  });
 };
 
 // Track general page views for specific sections

@@ -47,13 +47,14 @@ Pizza Plus is a kosher pizza restaurant website built as a modern full-stack web
 - Restaurant-specific knowledge base
 
 ### 4. Advanced Analytics & Tracking
-- TikTok Pixel integration with comprehensive event tracking
-- Customer journey tracking: ViewContent, AddToCart, InitiateCheckout, PlaceAnOrder
-- Advanced event parameters with product IDs, values, and currency
-- User identification with SHA-256 hashed PII data
-- Contact interaction tracking (phone, WhatsApp)
-- Promotional campaign tracking and language change analytics
-- Event deduplication with unique event IDs
+- **Dual TikTok Tracking System**: Client-side Pixel + Server-side Events API
+- **TikTok Pixel ID**: D179S7RC77UA68QT5U1G with access token integration
+- **Comprehensive Event Tracking**: ViewContent, AddToCart, InitiateCheckout, PlaceAnOrder
+- **Advanced Parameters**: Product IDs, values, currency, user data with SHA-256 hashing
+- **Server-side API**: Reliable event delivery with IP, User-Agent, and referrer data
+- **Contact Interaction Tracking**: Phone calls, WhatsApp clicks
+- **Campaign Analytics**: Promotional banner clicks, language changes
+- **Data Privacy Compliance**: PII hashing and event deduplication
 
 ### 5. Multilingual Support
 - Complete translation system for 4 languages
