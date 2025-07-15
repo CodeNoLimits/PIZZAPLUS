@@ -72,7 +72,7 @@ export const TRANSLATIONS: Record<string, Translations> = {
     // Contact
     contactTitle: 'בואו בקרו אותנו',
     address: 'איש מצלח 2, הר חומה, ירושלים',
-    phone: '02-9921201',
+    phone: '02-6363-108',
     whatsappOrders: '054-6083500',
     hours: 'א׳-ה׳: 11:00-23:00 | ו׳: 11:00-15:00 | מוצ״ש: 20:00-23:00',
     
@@ -131,7 +131,7 @@ export const TRANSLATIONS: Record<string, Translations> = {
     // Contact
     contactTitle: 'Visit Us',
     address: '2 Ish Matzliach St, Har Homa, Jerusalem',
-    phone: '02-9921201',
+    phone: '02-6363-108',
     whatsappOrders: '054-6083500',
     hours: 'Sun-Thu: 11:00-23:00 | Fri: 11:00-15:00 | Sat Night: 20:00-23:00',
     
@@ -190,7 +190,7 @@ export const TRANSLATIONS: Record<string, Translations> = {
     // Contact
     contactTitle: 'Visitez-nous',
     address: '2 Rue Ish Matzliach, Har Homa, Jérusalem',
-    phone: '02-9921201',
+    phone: '02-6363-108',
     whatsappOrders: '054-6083500',
     hours: 'Dim-Jeu: 11h00-23h00 | Ven: 11h00-15h00 | Sam soir: 20h00-23h00',
     
@@ -249,7 +249,7 @@ export const TRANSLATIONS: Record<string, Translations> = {
     // Contact
     contactTitle: 'Посетите нас',
     address: 'Иш Мацлиах 2, Ар Хома, Иерусалим',
-    phone: '02-9921201',
+    phone: '02-6363-108',
     whatsappOrders: '054-6083500',
     hours: 'Вс-Чт: 11:00-23:00 | Пт: 11:00-15:00 | Сб вечер: 20:00-23:00',
     

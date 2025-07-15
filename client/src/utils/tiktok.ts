@@ -182,7 +182,8 @@ export const trackSearch = (searchTerm: string) => {
 export const trackPageView = (contentType: string, contentName: string) => {
   const eventId = generateEventId();
   trackTikTokEvent('ViewContent', {
-    content_type: contentType,
+    content_id: `page_${contentName}`,
+    content_type: 'product',
     content_name: contentName
   }, eventId);
 };
@@ -191,7 +192,9 @@ export const trackPageView = (contentType: string, contentName: string) => {
 export const trackContact = (method: string) => {
   const eventId = generateEventId();
   trackTikTokEvent('Contact', {
-    contact_method: method
+    content_id: `contact_${method}`,
+    content_type: 'product',
+    content_name: `contact_${method}`
   }, eventId);
 };
 
@@ -199,7 +202,8 @@ export const trackContact = (method: string) => {
 export const trackPromoClick = () => {
   const eventId = generateEventId();
   trackTikTokEvent('ViewContent', {
-    content_type: 'promotion',
+    content_id: 'promo_second_pizza_half_price',
+    content_type: 'product',
     content_name: 'second_pizza_half_price'
   }, eventId);
 };
@@ -208,7 +212,8 @@ export const trackPromoClick = () => {
 export const trackLanguageChange = (newLanguage: string) => {
   const eventId = generateEventId();
   trackTikTokEvent('ViewContent', {
-    content_type: 'language_change',
-    content_name: newLanguage
+    content_id: `lang_${newLanguage}`,
+    content_type: 'product',
+    content_name: `language_${newLanguage}`
   }, eventId);
 };
