@@ -6,9 +6,9 @@ export default defineStackbitConfig({
   stackbitVersion: "~0.6.0",
   ssgName: "custom",
   nodeVersion: "18",
-  buildCommand: "npm run build",
+  buildCommand: "npm run netlify:build",
   devCommand: "npm run dev --prefix client",
-  outputDir: "dist",
+  outputDir: "dist/public",
   contentSources: [
     new GitContentSource({
       rootPath: path.join(__dirname, "client"),
