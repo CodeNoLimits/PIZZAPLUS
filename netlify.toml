@@ -1,20 +1,9 @@
 [build]
-  publish = "dist/public" 
-  command = "npm run build:client"
+  publish = "dist/public"
+  command = "npm install && npm run build"
 
 [build.environment]
   NODE_VERSION = "18"
-
-# Enable Visual Editor
-[template]
-  incoming-hooks = ["stackbit"]
-
-[build.processing]
-  skip_processing = false
-  
-# Visual Editor configuration
-[context.deploy-preview.environment]
-  STACKBIT_API_URL = "https://api.stackbit.com"
 
 [[redirects]]
   from = "/*"

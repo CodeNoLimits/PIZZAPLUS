@@ -1,56 +1,80 @@
 backend:
   name: git-gateway
   branch: main
+  commit_messages:
+    create: 'Create {{collection}} "{{slug}}"'
+    update: 'Update {{collection}} "{{slug}}"'
+    delete: 'Delete {{collection}} "{{slug}}"'
 
-media_folder: "client/public/assets"
-public_folder: "/assets"
+media_folder: "client/public/images/menu"
+public_folder: "/images/menu"
 
-locale: 'he'
+logo_url: https://pizzaplus.co.il/favicon.ico
 show_preview_links: true
+search: true
+editor:
+  preview: true
 
 collections:
-  - name: "menu"
-    label: "תפריט"
-    folder: "client/src/data"
+  # 🍕 MENU ITEMS COMPLET
+  - name: "menu_items"
+    label: "🍕 Items du Menu"
+    folder: "client/src/data/menu"
     create: true
+    editor:
+      preview: true
     slug: "{{slug}}"
     fields:
-      - {label: "שם המנה", name: "name", widget: "string"}
-      - {label: "תיאור", name: "description", widget: "text"}
-      - {label: "מחיר", name: "price", widget: "number"}
-      - {label: "קטגוריה", name: "category", widget: "select", options: ["פיצות", "פסטות", "סלטים", "עיקריות", "תוספות", "קינוחים", "משקאות"]}
-      - {label: "תמונה", name: "image", widget: "image"}
-      - {label: "פופולרי", name: "popular", widget: "boolean", default: false}
-      - {label: "תוספות זמינות", name: "toppings", widget: "list", required: false}
+      - {label: "Nom (Hébreu)", name: "name_he", widget: "string"}
+      - {label: "Nom (Anglais)", name: "name_en", widget: "string"}
+      - {label: "Description", name: "description", widget: "text", required: false}
+      - {label: "Catégorie", name: "category", widget: "select", options: ["pizzas", "pastas", "salads", "drinks", "desserts", "sides"]}
+      - {label: "Prix (agorot)", name: "price", widget: "number"}
+      - {label: "Image", name: "image", widget: "image"}
+      - {label: "Disponible", name: "available", widget: "boolean", default: true}
+      - {label: "Populaire", name: "popular", widget: "boolean", default: false}
+      - {label: "Ordre d'affichage", name: "order", widget: "number", default: 0}
 
+  # ⚙️ PARAMÈTRES RESTAURANT
   - name: "settings"
-    label: "הגדרות"
+    label: "⚙️ Paramètres"
+    editor:
+      preview: true
     files:
-      - file: "client/src/data/restaurant-info.json"
-        label: "פרטי המסעדה"
-        name: "restaurant_info"
+      - label: "Informations Restaurant"
+        name: "restaurant"
+        file: "client/src/data/restaurant-info.json"
         fields:
-          - {label: "שם המסעדה", name: "name", widget: "string"}
-          - {label: "כתובת", name: "address", widget: "string"}
-          - {label: "טלפון", name: "phone", widget: "string"}
-          - {label: "WhatsApp", name: "whatsapp", widget: "string"}
-          - {label: "שעות פתיחה", name: "hours", widget: "text"}
-          - {label: "תמונת רקע ראשית", name: "hero_image", widget: "image"}
+          - {label: "Nom du Restaurant", name: "name", widget: "string", default: "Pizza Plus"}
+          - {label: "Téléphone Principal", name: "phone", widget: "string", default: "02-6363-108"}
+          - {label: "WhatsApp", name: "whatsapp", widget: "string", default: "054-6083500"}
+          - {label: "Adresse Complète", name: "address", widget: "text", default: "איש מצלח 2, הר חומה, ירושלים"}
+          - {label: "Heures Dimanche-Jeudi", name: "hoursSunThu", widget: "string", default: "11:00-23:00"}
+          - {label: "Heures Vendredi", name: "hoursFri", widget: "string", default: "11:00-15:00"}
+          - {label: "Heures Samedi", name: "hoursSat", widget: "string", default: "20:00-23:00"}
+          - {label: "Certification Casher", name: "kosherCert", widget: "string", default: "בד״ץ"}
           
-      - file: "client/src/data/promotions.json"
-        label: "מבצעים"
-        name: "promotions" 
+      - label: "Prix du Menu"
+        name: "prices"
+        file: "client/src/data/menu-prices.json"
         fields:
-          - {label: "מבצע פעיל", name: "active", widget: "boolean"}
-          - {label: "טקסט המבצע", name: "text", widget: "string"}
-          - {label: "צבע רקע", name: "background_color", widget: "color"}
+          - {label: "Pizza XL Prix (agorot)", name: "pizzaXL", widget: "number", default: 6500}
+          - {label: "Pâtes Prix (agorot)", name: "pastas", widget: "number", default: 4500}
+          - {label: "Petite Salade Prix (agorot)", name: "smallSalad", widget: "number", default: 3500}
+          - {label: "Grande Salade Prix (agorot)", name: "largeSalad", widget: "number", default: 5000}
+          - {label: "Prix Topping (agorot)", name: "toppingPrice", widget: "number", default: 900}
 
+  # 🖼️ GALERIE
   - name: "gallery"
-    label: "גלריה"
-    folder: "client/public/assets/gallery"
+    label: "🖼️ Galerie"
+    folder: "client/public/images/gallery"
     create: true
+    editor:
+      preview: true
     slug: "{{slug}}"
     fields:
-      - {label: "כותרת", name: "title", widget: "string"}
-      - {label: "תמונה", name: "image", widget: "image"}
-      - {label: "תיאור", name: "description", widget: "text", required: false}
+      - {label: "Titre", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "text", required: false}
+      - {label: "Image", name: "image", widget: "image"}
+      - {label: "Catégorie", name: "category", widget: "select", options: ["pizzas", "restaurant", "preparation", "team"]}
+      - {label: "Ordre", name: "order", widget: "number", default: 0}
