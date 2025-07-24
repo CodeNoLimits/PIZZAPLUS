@@ -34,7 +34,7 @@ export const TRANSLATIONS: Record<string, Translations> = {
     
     // Hero section
     mainTitle: 'פיצה פלוס',
-    subtitle: 'פיצריה כשרה בירושלים',
+    subtitle: 'הפיצה הכשרה הכי טובה בירושלים',
     kosherBadge: 'כשר בד״ץ',
     viewMenu: 'צפה בתפריט',
     
@@ -292,13 +292,13 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionEn: 'Medium pizza with tomato sauce and mozzarella - 36cm diameter',
     descriptionFr: 'Pizza moyenne avec sauce tomate et mozzarella - diamètre 36cm',
     descriptionRu: 'Средняя пицца с томатным соусом и моцареллой - диаметр 36см',
-    price: 5200, // ₪52
+    price: 4500, // ₪45
     category: 'pizzas',
     image: pizzaLImage,
     available: true,
     toppings: ['tomatoes', 'onions', 'olives-green', 'olives-black', 'mushrooms', 'hot-pepper', 'bulgarian', 'eggplant', 'sweet-potato', 'corn', 'pineapple', 'tuna', 'pesto'],
     toppingPrice: 700, // ₪7 per topping for whole pizza
-    halfToppingPrice: 600, // ₪6 per topping for half pizza (20% more than CSV ₪5)
+    halfToppingPrice: 500, // ₪5 per topping for half pizza
   },
   {
     id: 'pizza-personal',
@@ -315,7 +315,7 @@ export const MENU_ITEMS: MenuItem[] = [
     image: personalPizzaImage,
     available: true,
     toppings: ['tomatoes', 'onions', 'olives-green', 'olives-black', 'mushrooms', 'hot-pepper', 'bulgarian', 'eggplant', 'sweet-potato', 'corn', 'pineapple', 'tuna', 'pesto'],
-    toppingPrice: 600, // ₪6 per topping (20% more than CSV ₪5)
+    toppingPrice: 500, // ₪5 per topping
   },
   
   // Pastas
@@ -329,7 +329,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionEn: 'Pasta in fresh tomato sauce with basil',
     descriptionFr: 'Pâtes dans une sauce tomate fraîche avec basilic',
     descriptionRu: 'Паста в свежем томатном соусе с базиликом',
-    price: 5200, // ₪52
+    price: 4500, // ₪45
     category: 'pastas',
     image: basilPastaImage,
     available: true,
@@ -344,7 +344,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionEn: 'Pasta in cream sauce with fresh mushrooms',
     descriptionFr: 'Pâtes dans une sauce à la crème avec champignons frais',
     descriptionRu: 'Паста в сливочном соусе со свежими грибами',
-    price: 5200, // ₪52
+    price: 4500, // ₪45
     category: 'pastas',
     image: mushroomCreamImage,
     available: true,
@@ -359,7 +359,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionEn: 'Pasta in tomato and cream sauce',
     descriptionFr: 'Pâtes dans une sauce tomate et crème',
     descriptionRu: 'Паста в томатно-сливочном соусе',
-    price: 5200, // ₪52
+    price: 4500, // ₪45
     category: 'pastas',
     image: rosePastaImage,
     available: true,
@@ -376,7 +376,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionEn: 'Fresh vegetables with olive oil and lemon dressing',
     descriptionFr: 'Légumes frais avec vinaigrette à l\'huile d\'olive et citron',
     descriptionRu: 'Свежие овощи с заправкой из оливкового масла и лимона',
-    price: 3900, // ₪39
+    price: 3500, // ₪35
     category: 'salads',
     image: smallSaladImage,
     available: true,
@@ -392,7 +392,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionEn: 'Fresh vegetables with olive oil and lemon dressing',
     descriptionFr: 'Légumes frais avec vinaigrette à l\'huile d\'olive et citron',
     descriptionRu: 'Свежие овощи с заправкой из оливкового масла и лимона',
-    price: 5500, // ₪55
+    price: 5000, // ₪50
     category: 'salads',
     image: largeSaladImage,
     available: true,
@@ -410,22 +410,37 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionEn: 'Fried fish in crispy coating with chips',
     descriptionFr: 'Poisson frit dans un enrobage croustillant avec frites',
     descriptionRu: 'Жареная рыба в хрустящей панировке с картофелем фри',
-    price: 6800, // ₪68
+    price: 6100, // ₪61
     category: 'mains',
     image: fishChipsImage,
     available: true,
   },
   {
-    id: 'cheese-crust',
-    nameHe: 'צ\'יז קראסט',
-    nameEn: 'Cheese Crust Pizza',
-    nameFr: 'Pizza Croûte au Fromage',
-    nameRu: 'Пицца с Сырной Корочкой',
-    descriptionHe: 'מגש פיצה עם קראסט ממולא בגבינה',
-    descriptionEn: 'Pizza tray with cheese-stuffed crust',
-    descriptionFr: 'Pizza avec croûte farcie au fromage',
-    descriptionRu: 'Пицца с корочкой, фаршированной сыром',
-    price: 7200, // ₪72
+    id: 'cheese-crust-large',
+    nameHe: 'צ\'יז קראסט L',
+    nameEn: 'Cheese Crust Pizza L',
+    nameFr: 'Pizza Croûte au Fromage L',
+    nameRu: 'Пицца с Сырной Корочкой L',
+    descriptionHe: 'מגש פיצה גדול עם קראסט ממולא בגבינה',
+    descriptionEn: 'Large pizza tray with cheese-stuffed crust',
+    descriptionFr: 'Grande pizza avec croûte farcie au fromage',
+    descriptionRu: 'Большая пицца с корочкой, фаршированной сыром',
+    price: 6300, // ₪63
+    category: 'mains',
+    image: cheeseCrustImage,
+    available: true,
+  },
+  {
+    id: 'cheese-crust-xl',
+    nameHe: 'צ\'יז קראסט XL',
+    nameEn: 'Cheese Crust Pizza XL',
+    nameFr: 'Pizza Croûte au Fromage XL',
+    nameRu: 'Пицца с Сырной Корочкой XL',
+    descriptionHe: 'מגש פיצה ענק עם קראסט ממולא בגבינה',
+    descriptionEn: 'Extra large pizza tray with cheese-stuffed crust',
+    descriptionFr: 'Très grande pizza avec croûte farcie au fromage',
+    descriptionRu: 'Очень большая пицца с корочкой, фаршированной сыром',
+    price: 8300, // ₪83
     category: 'mains',
     image: cheeseCrustImage,
     available: true,
@@ -455,7 +470,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionEn: 'Sticks with chocolate',
     descriptionFr: 'Bâtonnets avec chocolat',
     descriptionRu: 'Палочки с шоколадом',
-    price: 3200, // ₪32
+    price: 2500, // ₪25
     category: 'desserts',
     image: chocolateSticksImage,
     available: true,
@@ -472,7 +487,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionEn: 'Small portion',
     descriptionFr: 'Petite portion',
     descriptionRu: 'Маленькая порция',
-    price: 1500, // ₪15
+    price: 1200, // ₪12
     category: 'sides',
     image: smallFriesImage,
     available: true,
@@ -487,7 +502,7 @@ export const MENU_ITEMS: MenuItem[] = [
     descriptionEn: 'Large portion',
     descriptionFr: 'Grande portion',
     descriptionRu: 'Большая порция',
-    price: 2400, // ₪24
+    price: 1800, // ₪18
     category: 'sides',
     image: largeFriesImage,
     available: true,
@@ -566,8 +581,8 @@ export const TOPPINGS = [
     nameRu: 'Помидоры',
     priceXL: 850, // ₪8.5 for XL
     priceL: 700, // ₪7 for L
-    pricePersonal: 600, // ₪6 for Personal
-    priceHalf: 600 // ₪6 for half L
+    pricePersonal: 500, // ₪5 for Personal
+    priceHalf: 500 // ₪5 for half L
   },
   { 
     id: 'onions', 
@@ -577,8 +592,8 @@ export const TOPPINGS = [
     nameRu: 'Лук',
     priceXL: 850,
     priceL: 700,
-    pricePersonal: 600,
-    priceHalf: 600
+    pricePersonal: 500,
+    priceHalf: 500
   },
   { 
     id: 'olives-green', 
@@ -588,8 +603,8 @@ export const TOPPINGS = [
     nameRu: 'Зеленые оливки',
     priceXL: 850,
     priceL: 700,
-    pricePersonal: 600,
-    priceHalf: 600
+    pricePersonal: 500,
+    priceHalf: 500
   },
   { 
     id: 'olives-black', 
@@ -599,8 +614,8 @@ export const TOPPINGS = [
     nameRu: 'Черные оливки',
     priceXL: 850,
     priceL: 700,
-    pricePersonal: 600,
-    priceHalf: 600
+    pricePersonal: 500,
+    priceHalf: 500
   },
   { 
     id: 'mushrooms', 
@@ -610,8 +625,8 @@ export const TOPPINGS = [
     nameRu: 'Грибы',
     priceXL: 850,
     priceL: 700,
-    pricePersonal: 600,
-    priceHalf: 600
+    pricePersonal: 500,
+    priceHalf: 500
   },
   { 
     id: 'hot-pepper', 
@@ -621,8 +636,8 @@ export const TOPPINGS = [
     nameRu: 'Острый перец',
     priceXL: 850,
     priceL: 700,
-    pricePersonal: 600,
-    priceHalf: 600
+    pricePersonal: 500,
+    priceHalf: 500
   },
   { 
     id: 'bulgarian', 
@@ -643,8 +658,8 @@ export const TOPPINGS = [
     nameRu: 'Баклажан',
     priceXL: 850,
     priceL: 700,
-    pricePersonal: 600,
-    priceHalf: 600
+    pricePersonal: 500,
+    priceHalf: 500
   },
   { 
     id: 'sweet-potato', 
@@ -654,8 +669,8 @@ export const TOPPINGS = [
     nameRu: 'Батат',
     priceXL: 850,
     priceL: 700,
-    pricePersonal: 600,
-    priceHalf: 600
+    pricePersonal: 500,
+    priceHalf: 500
   },
   { 
     id: 'corn', 
@@ -665,8 +680,8 @@ export const TOPPINGS = [
     nameRu: 'Кукуруза',
     priceXL: 850,
     priceL: 700,
-    pricePersonal: 600,
-    priceHalf: 600
+    pricePersonal: 500,
+    priceHalf: 500
   },
   { 
     id: 'pineapple', 
@@ -676,8 +691,8 @@ export const TOPPINGS = [
     nameRu: 'Ананас',
     priceXL: 850,
     priceL: 700,
-    pricePersonal: 600,
-    priceHalf: 600
+    pricePersonal: 500,
+    priceHalf: 500
   },
   { 
     id: 'tuna', 
@@ -698,8 +713,8 @@ export const TOPPINGS = [
     nameRu: 'Песто',
     priceXL: 850,
     priceL: 700,
-    pricePersonal: 600,
-    priceHalf: 600
+    pricePersonal: 500,
+    priceHalf: 500
   },
   
   // Salad toppings

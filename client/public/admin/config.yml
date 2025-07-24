@@ -1,0 +1,56 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "client/public/assets"
+public_folder: "/assets"
+
+locale: 'he'
+show_preview_links: true
+
+collections:
+  - name: "menu"
+    label: "תפריט"
+    folder: "client/src/data"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "שם המנה", name: "name", widget: "string"}
+      - {label: "תיאור", name: "description", widget: "text"}
+      - {label: "מחיר", name: "price", widget: "number"}
+      - {label: "קטגוריה", name: "category", widget: "select", options: ["פיצות", "פסטות", "סלטים", "עיקריות", "תוספות", "קינוחים", "משקאות"]}
+      - {label: "תמונה", name: "image", widget: "image"}
+      - {label: "פופולרי", name: "popular", widget: "boolean", default: false}
+      - {label: "תוספות זמינות", name: "toppings", widget: "list", required: false}
+
+  - name: "settings"
+    label: "הגדרות"
+    files:
+      - file: "client/src/data/restaurant-info.json"
+        label: "פרטי המסעדה"
+        name: "restaurant_info"
+        fields:
+          - {label: "שם המסעדה", name: "name", widget: "string"}
+          - {label: "כתובת", name: "address", widget: "string"}
+          - {label: "טלפון", name: "phone", widget: "string"}
+          - {label: "WhatsApp", name: "whatsapp", widget: "string"}
+          - {label: "שעות פתיחה", name: "hours", widget: "text"}
+          - {label: "תמונת רקע ראשית", name: "hero_image", widget: "image"}
+          
+      - file: "client/src/data/promotions.json"
+        label: "מבצעים"
+        name: "promotions" 
+        fields:
+          - {label: "מבצע פעיל", name: "active", widget: "boolean"}
+          - {label: "טקסט המבצע", name: "text", widget: "string"}
+          - {label: "צבע רקע", name: "background_color", widget: "color"}
+
+  - name: "gallery"
+    label: "גלריה"
+    folder: "client/public/assets/gallery"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "כותרת", name: "title", widget: "string"}
+      - {label: "תמונה", name: "image", widget: "image"}
+      - {label: "תיאור", name: "description", widget: "text", required: false}

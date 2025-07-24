@@ -4,6 +4,7 @@ import { TRANSLATIONS } from './constants';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import PromoBanner from './components/PromoBanner';
+// WixLite removed for production
 import { MessageCircle, Phone } from 'lucide-react';
 
 // Lazy load components that are not immediately visible
@@ -14,6 +15,7 @@ const Contact = lazy(() => import('./components/Contact'));
 const Cart = lazy(() => import('./components/Cart'));
 const ChatWidget = lazy(() => import('./components/ChatWidget'));
 const OrderDialog = lazy(() => import('./components/OrderDialog'));
+// Removed old builder interface
 
 // Import TikTok tracking directly (small utility)
 import { trackPageView, trackLanguageChange } from './utils/tiktok';
@@ -23,6 +25,7 @@ function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOrderOpen, setIsOrderOpen] = useState(false);
+  // Removed old builder logic
 
   const translations = TRANSLATIONS[currentLanguage];
 
@@ -98,7 +101,7 @@ function App() {
   const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className={`font-heebo ${currentLanguage === 'he' ? 'rtl' : 'ltr'} bg-gray-50 min-h-screen`}>
+      <div className={`font-heebo ${currentLanguage === 'he' ? 'rtl' : 'ltr'} bg-gray-50 min-h-screen`}>
       {/* Promotional Banner - Top Priority Placement */}
       <PromoBanner 
         translations={translations} 
@@ -217,7 +220,8 @@ function App() {
         translations={translations}
         currentLanguage={currentLanguage}
       />
-    </div>
+
+      </div>
   );
 }
 
