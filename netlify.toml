@@ -1,15 +1,15 @@
 [build]
-  publish = "dist/public"
+  publish = "dist"
   command = "npm install && npm run build"
 
 [build.environment]
   NODE_VERSION = "18"
 
-# Visual Editor dev command
+# Visual Editor dev command  
 [dev]
-  command = "cd client && npm run dev"
+  command = "npm run dev --prefix client"
   port = 5173
-  
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
