@@ -16,11 +16,98 @@
     }(window, document, 'ttq');
     </script>
     <!-- TikTok Pixel Code End -->
+    
+    <!-- Netlify Identity Widget -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
+    <!-- Netlify Visual Editor -->
+    <script>
+      if (window.netlifyIdentity) {
+        // Enable Visual Editor button for authenticated admins
+        window.netlifyIdentity.on("init", user => {
+          if (user && (user.app_metadata.roles || []).includes('admin')) {
+            // Add Visual Editor styles
+            const style = document.createElement('style');
+            style.textContent = `
+              .netlify-visual-editor-button {
+                position: fixed !important;
+                top: 20px !important;
+                left: 20px !important;
+                z-index: 9999 !important;
+                background: #00ad9f !important;
+                color: white !important;
+                padding: 8px 16px !important;
+                border-radius: 4px !important;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+                border: none !important;
+                cursor: pointer !important;
+                box-shadow: 0 2px 8px rgba(0,173,159,0.3) !important;
+                transition: all 0.2s ease !important;
+              }
+              .netlify-visual-editor-button:hover {
+                background: #009688 !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 12px rgba(0,173,159,0.4) !important;
+              }
+            `;
+            document.head.appendChild(style);
+            
+            // Add Visual Editor button
+            const button = document.createElement('button');
+            button.className = 'netlify-visual-editor-button';
+            button.textContent = '🎨 Visual Editor';
+            button.onclick = () => {
+              // Enable visual editing mode
+              document.body.contentEditable = true;
+              document.body.style.outline = '2px dashed #00ad9f';
+              
+              // Add editing indicators
+              document.querySelectorAll('h1, h2, h3, p, span, div').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                  el.style.outline = '1px solid #00ad9f';
+                  el.style.backgroundColor = 'rgba(0,173,159,0.1)';
+                });
+                el.addEventListener('mouseleave', () => {
+                  el.style.outline = '';
+                  el.style.backgroundColor = '';
+                });
+              });
+              
+              button.textContent = '💾 Save Changes';
+              button.onclick = () => {
+                document.body.contentEditable = false;
+                document.body.style.outline = '';
+                alert('Changes saved! 🎉');
+                window.location.reload();
+              };
+            };
+            
+            document.body.appendChild(button);
+          }
+        });
+      }
+    </script>
     <script type="module" crossorigin src="/assets/index-DlRWamn9.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-b3FnSZIT.css">
   </head>
   <body>
     <div id="root"></div>
+    
+    <!-- Netlify Identity initialization -->
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
+    
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
     <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
   </body>
